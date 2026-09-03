@@ -28,43 +28,42 @@ DROP_ROLE_NAME = "Дроп"
 
 active_drop = None
 drop_task = None
-
 case_open_lock = asyncio.Lock()
 
 
 items = {
-    "🧦 Чулок": {"price": 25, "rarity": "⚪ Обычный"},
-    "💾 Ubuntu": {"price": 50, "rarity": "⚪ Обычный"},
-    "💾 Debian": {"price": 75, "rarity": "⚪ Обычный"},
-    "💾 Fedora": {"price": 100, "rarity": "🟢 Необычный"},
-    "💾 Linux Mint": {"price": 125, "rarity": "🟢 Необычный"},
-    "💾 Manjaro": {"price": 175, "rarity": "🔵 Редкий"},
-    "💾 Arch Linux": {"price": 250, "rarity": "🔵 Редкий"},
-    "💾 Gentoo": {"price": 500, "rarity": "🟣 Эпический"},
-    "💜 Аметист": {"price": 150, "rarity": "🔵 Редкий"},
-    "⚡ Lit Energy": {"price": 75, "rarity": "⚪ Обычный"},
-    "⚡ Monster": {"price": 125, "rarity": "🟢 Необычный"},
-    "⚡ Red Bull": {"price": 150, "rarity": "🔵 Редкий"},
-    "⚡ Burn": {"price": 200, "rarity": "🔵 Редкий"},
-    "🎮 Godot": {"price": 125, "rarity": "🟢 Необычный"},
-    "🎮 Unity": {"price": 250, "rarity": "🔵 Редкий"},
-    "🎮 Unreal Engine": {"price": 500, "rarity": "🟣 Эпический"},
-    "🎮 Source Engine": {"price": 750, "rarity": "🟣 Эпический"},
-    "🎮 CryEngine": {"price": 1000, "rarity": "🟠 Легендарный"},
-    "🦴 Dragonclaw Hook": {"price": 375, "rarity": "🟣 Эпический"},
-    "🚜 МТЗ-82": {"price": 250, "rarity": "🟢 Необычный"},
-    "🚜 Беларус-1221": {"price": 500, "rarity": "🔵 Редкий"},
-    "🚜 John Deere": {"price": 1000, "rarity": "🟣 Эпический"},
-    "🚜 Fendt": {"price": 1750, "rarity": "🟠 Легендарный"},
-    "🚜 К-700": {"price": 2500, "rarity": "🟠 Легендарный"},
-    "🚜 К-744": {"price": 3750, "rarity": "🔴 Артефакт"},
-    "🧱 Кирпич из Минска": {"price": 60, "rarity": "⚪ Обычный"},
-    "🐸 Жаба": {"price": 300, "rarity": "🔵 Редкий"},
-    "🧠 нейрон": {"price": 450, "rarity": "🟣 Эпический"},
-    "🔥 Лицензия на огонь": {"price": 900, "rarity": "🟣 Эпический"},
-    "💎 Алмазная анальная пробка": {"price": 2250, "rarity": "🟠 Легендарный"},
-    "👑 Атом Лёхи Пружины": {"price": 5000, "rarity": "🔴 Артефакт"},
-    "📖 26 том магической битвы": {"price": 200, "rarity": "🔵 Редкий"}
+    "🧦 Чулок": {"price": 25, "rarity": "common"},
+    "💾 Ubuntu": {"price": 50, "rarity": "common"},
+    "💾 Debian": {"price": 75, "rarity": "common"},
+    "💾 Fedora": {"price": 100, "rarity": "uncommon"},
+    "💾 Linux Mint": {"price": 125, "rarity": "uncommon"},
+    "💾 Manjaro": {"price": 175, "rarity": "rare"},
+    "💾 Arch Linux": {"price": 250, "rarity": "rare"},
+    "💾 Gentoo": {"price": 500, "rarity": "epic"},
+    "💜 Аметист": {"price": 150, "rarity": "rare"},
+    "⚡ Lit Energy": {"price": 75, "rarity": "common"},
+    "⚡ Monster": {"price": 125, "rarity": "uncommon"},
+    "⚡ Red Bull": {"price": 150, "rarity": "rare"},
+    "⚡ Burn": {"price": 200, "rarity": "rare"},
+    "🎮 Godot": {"price": 125, "rarity": "uncommon"},
+    "🎮 Unity": {"price": 250, "rarity": "rare"},
+    "🎮 Unreal Engine": {"price": 500, "rarity": "epic"},
+    "🎮 Source Engine": {"price": 750, "rarity": "epic"},
+    "🎮 CryEngine": {"price": 1000, "rarity": "legendary"},
+    "🦴 Dragonclaw Hook": {"price": 375, "rarity": "epic"},
+    "🚜 МТЗ-82": {"price": 250, "rarity": "uncommon"},
+    "🚜 Беларус-1221": {"price": 500, "rarity": "rare"},
+    "🚜 John Deere": {"price": 1000, "rarity": "epic"},
+    "🚜 Fendt": {"price": 1750, "rarity": "legendary"},
+    "🚜 К-700": {"price": 2500, "rarity": "legendary"},
+    "🚜 К-744": {"price": 3750, "rarity": "artifact"},
+    "🧱 Кирпич из Минска": {"price": 60, "rarity": "common"},
+    "🐸 Жаба": {"price": 300, "rarity": "rare"},
+    "🧠 нейрон": {"price": 450, "rarity": "epic"},
+    "🔥 Лицензия на огонь": {"price": 900, "rarity": "epic"},
+    "💎 Алмазная анальная пробка": {"price": 2250, "rarity": "legendary"},
+    "👑 Атом Лёхи Пружины": {"price": 5000, "rarity": "artifact"},
+    "📖 26 том магической битвы": {"price": 200, "rarity": "rare"}
 }
 
 
@@ -74,110 +73,104 @@ cases = {
         "money": (0, 3),
         "weight": 45,
         "item_chance": 0.18,
-        "unlock_level": 1,
-        "loot": [
-            ("🧦 Чулок", 40),
-            ("💾 Ubuntu", 10),
-            ("💾 Debian", 5),
-            ("⚡ Lit Energy", 3)
-        ]
+        "unlock": 1,
+        "loot": {
+            "🧦 Чулок": 40,
+            "💾 Ubuntu": 10,
+            "💾 Debian": 5,
+            "⚡ Lit Energy": 3
+        }
     },
-
     "🥔 Кейс лукашенко": {
         "price": 20,
         "money": (0, 10),
         "weight": 25,
         "item_chance": 0.22,
-        "unlock_level": 2,
-        "loot": [
-            ("🧱 Кирпич из Минска", 40),
-            ("⚡ Lit Energy", 20),
-            ("⚡ Monster", 15),
-            ("🚜 МТЗ-82", 5),
-            ("🚜 Беларус-1221", 4),
-            ("🚜 John Deere", 1)
-        ]
+        "unlock": 2,
+        "loot": {
+            "🧱 Кирпич из Минска": 40,
+            "⚡ Lit Energy": 20,
+            "⚡ Monster": 15,
+            "🚜 МТЗ-82": 5,
+            "🚜 Беларус-1221": 4,
+            "🚜 John Deere": 1
+        }
     },
-
     "🐸 Кейс жаби жаби": {
         "price": 50,
         "money": (1, 20),
         "weight": 16,
         "item_chance": 0.25,
-        "unlock_level": 3,
-        "loot": [
-            ("🐸 Жаба", 38),
-            ("💜 Аметист", 27),
-            ("⚡ Monster", 20),
-            ("⚡ Red Bull", 11),
-            ("💾 Fedora", 4)
-        ]
+        "unlock": 3,
+        "loot": {
+            "🐸 Жаба": 38,
+            "💜 Аметист": 27,
+            "⚡ Monster": 20,
+            "⚡ Red Bull": 11,
+            "💾 Fedora": 4
+        }
     },
-
     "💀 Кейс головного мозга": {
         "price": 100,
         "money": (2, 35),
         "weight": 8,
         "item_chance": 0.28,
-        "unlock_level": 4,
-        "loot": [
-            ("🧠 нейрон", 39),
-            ("🎮 Godot", 27),
-            ("💾 Manjaro", 17),
-            ("🦴 Dragonclaw Hook", 8),
-            ("🎮 Unity", 6),
-            ("💾 Arch Linux", 3)
-        ]
+        "unlock": 4,
+        "loot": {
+            "🧠 нейрон": 39,
+            "🎮 Godot": 27,
+            "💾 Manjaro": 17,
+            "🦴 Dragonclaw Hook": 8,
+            "🎮 Unity": 6,
+            "💾 Arch Linux": 3
+        }
     },
-
     "🔥 Хз огонь": {
         "price": 250,
         "money": (5, 80),
         "weight": 4,
         "item_chance": 0.31,
-        "unlock_level": 5,
-        "loot": [
-            ("🔥 Лицензия на огонь", 29),
-            ("🎮 Unity", 23),
-            ("🎮 Unreal Engine", 19),
-            ("🎮 Source Engine", 13),
-            ("💾 Arch Linux", 9),
-            ("💾 Gentoo", 5),
-            ("🎮 CryEngine", 2)
-        ]
+        "unlock": 5,
+        "loot": {
+            "🔥 Лицензия на огонь": 29,
+            "🎮 Unity": 23,
+            "🎮 Unreal Engine": 19,
+            "🎮 Source Engine": 13,
+            "💾 Arch Linux": 9,
+            "💾 Gentoo": 5,
+            "🎮 CryEngine": 2
+        }
     },
-
     "💎 Кейс алмазик": {
         "price": 500,
         "money": (10, 150),
         "weight": 1.5,
         "item_chance": 0.34,
-        "unlock_level": 7,
-        "loot": [
-            ("💎 Алмазная анальная пробка", 25),
-            ("🚜 Fendt", 22),
-            ("🚜 К-700", 18),
-            ("🚜 К-744", 7),
-            ("🎮 CryEngine", 12),
-            ("🦴 Dragonclaw Hook", 10),
-            ("💾 Gentoo", 6)
-        ]
+        "unlock": 7,
+        "loot": {
+            "💎 Алмазная анальная пробка": 25,
+            "🚜 Fendt": 22,
+            "🚜 К-700": 18,
+            "🚜 К-744": 7,
+            "🎮 CryEngine": 12,
+            "🦴 Dragonclaw Hook": 10,
+            "💾 Gentoo": 6
+        }
     },
-
     "👑 Кейс Лёхи Пружины": {
         "price": 1000,
         "money": (20, 300),
         "weight": 0.5,
         "item_chance": 0.38,
-        "unlock_level": 10,
-        "loot": [
-            ("👑 Атом Лёхи Пружины", 8),
-            ("🚜 К-744", 15),
-            ("💎 Алмазная анальная пробка", 20),
-            ("🎮 CryEngine", 18),
-            ("🦴 Dragonclaw Hook", 17),
-            ("💾 Gentoo", 22)
-        ]
+        "unlock": 10,
+        "loot": {
+            "👑 Атом Лёхи Пружины": 8,
+            "🚜 К-744": 15,
+            "💎 Алмазная анальная пробка": 20,
+            "🎮 CryEngine": 18,
+            "🦴 Dragonclaw Hook": 17,
+            "💾 Gentoo": 22
+        }
     }
 }
 
@@ -201,131 +194,143 @@ materials = {
 hats = {
     "🧢 Кепка разведчика (шапка)": {
         "material": "скрап",
-        "weight": 30
+        "weight": 30,
+        "value": 15
     },
     "🪖 Каска инженера (шапка)": {
         "material": "скрап",
-        "weight": 25
+        "weight": 25,
+        "value": 20
     },
     "🎖️ Фуражка солдата (шапка)": {
         "material": "скрап",
-        "weight": 20
+        "weight": 20,
+        "value": 25
     },
     "🩺 Шапка медика (шапка)": {
         "material": "скрап",
-        "weight": 15
+        "weight": 15,
+        "value": 30
     },
     "🕶️ Очки снайпера (шапка)": {
         "material": "скрап",
-        "weight": 7
+        "weight": 7,
+        "value": 60
     },
     "🧰 Гаечная корона инженера (шапка)": {
         "material": "скрап",
-        "weight": 3
+        "weight": 3,
+        "value": 150
     },
 
     "🎩 Цилиндр шпиона (шапка)": {
         "material": "метал",
-        "weight": 28
+        "weight": 28,
+        "value": 100
     },
     "🥽 Очки подрывника (шапка)": {
         "material": "метал",
-        "weight": 23
+        "weight": 23,
+        "value": 125
     },
     "🧢 Кепка медика (шапка)": {
         "material": "метал",
-        "weight": 18
+        "weight": 18,
+        "value": 150
     },
     "🪖 Военная каска (шапка)": {
         "material": "метал",
-        "weight": 14
+        "weight": 14,
+        "value": 200
     },
     "🤠 Шляпа стрелка (шапка)": {
         "material": "метал",
-        "weight": 10
+        "weight": 10,
+        "value": 300
     },
     "💼 Чемодан на голове (шапка)": {
         "material": "метал",
-        "weight": 5
+        "weight": 5,
+        "value": 750
     },
     "👑 Корона Mann Co. (шапка)": {
         "material": "метал",
-        "weight": 2
+        "weight": 2,
+        "value": 2000
     },
 
     "🧢 Кепка разведчика Deluxe (шапка)": {
         "material": "мвк",
-        "weight": 22
+        "weight": 22,
+        "value": 500
     },
     "🪖 Шлем тяжёлого (шапка)": {
         "material": "мвк",
-        "weight": 18
+        "weight": 18,
+        "value": 600
     },
     "🎩 Цилиндр джентльмена (шапка)": {
         "material": "мвк",
-        "weight": 15
+        "weight": 15,
+        "value": 750
     },
     "🎃 Тыква на голове (шапка)": {
         "material": "мвк",
-        "weight": 12
+        "weight": 12,
+        "value": 1000
     },
     "🐴 Маска лошади (шапка)": {
         "material": "мвк",
-        "weight": 9
+        "weight": 9,
+        "value": 1500
     },
     "🗿 Маска Моаи (шапка)": {
         "material": "мвк",
-        "weight": 7
+        "weight": 7,
+        "value": 2500
     },
     "🧠 Мозг на голове (шапка)": {
         "material": "мвк",
-        "weight": 5
+        "weight": 5,
+        "value": 4000
     },
     "🔥 Горящая голова (шапка)": {
         "material": "мвк",
-        "weight": 3
+        "weight": 3,
+        "value": 7000
     },
     "💎 Алмазная шапка (шапка)": {
         "material": "мвк",
-        "weight": 1.5
+        "weight": 1.5,
+        "value": 15000
     },
     "👑 Корона директора Mann Co. (шапка)": {
         "material": "мвк",
-        "weight": 0.5
+        "weight": 0.5,
+        "value": 35000
     }
 }
 
 
-craft_chances = {
-    "скрап": 0.70,
-    "метал": 0.55,
-    "мвк": 0.40
+anime_titles = {
+    "🗿 Абсолют": 30,
+    "🕳️ Дэд инсайд": 25,
+    "🧍 NPC": 20,
+    "🥶 Сигма": 10,
+    "🧠 200 IQ": 6,
+    "🤫 Анимешник": 4,
+    "⚡ Протагонист": 3,
+    "💀 Последний нейрон": 1,
+    "🔥 Главный герой": 0.8,
+    "👑 Избранный": 0.2
 }
 
 
-anime_titles = [
-    ("🗿 Абсолют", 30),
-    ("🕳️ Дэд инсайд", 25),
-    ("🧍 NPC", 20),
-    ("🥶 Сигма", 10),
-    ("🧠 200 IQ", 6),
-    ("🤫 Анимешник", 4),
-    ("⚡ Протагонист", 3),
-    ("💀 Последний нейрон", 1),
-    ("🔥 Главный герой", 0.8),
-    ("👑 Избранный", 0.2)
-]
-
-
-def db():
-    return sqlite3.connect(DB)
-
-
 def init_db():
-    conn = db()
-    cur = conn.cursor()
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
 
-    cur.execute("""
+    c.execute("""
         CREATE TABLE IF NOT EXISTS users (
             user_id INTEGER PRIMARY KEY,
             coins INTEGER DEFAULT 1000,
@@ -342,34 +347,16 @@ def init_db():
         )
     """)
 
-    cur.execute("PRAGMA table_info(users)")
-    columns = [row[1] for row in cur.fetchall()]
-
-    migrations = {
-        "level": "INTEGER DEFAULT 1",
-        "xp": "INTEGER DEFAULT 0",
-        "scrap": "INTEGER DEFAULT 0",
-        "metal": "INTEGER DEFAULT 0",
-        "mvk": "INTEGER DEFAULT 0",
-        "hat": "TEXT"
-    }
-
-    for column, definition in migrations.items():
-        if column not in columns:
-            cur.execute(
-                f"ALTER TABLE users ADD COLUMN {column} {definition}"
-            )
-
-    cur.execute("""
+    c.execute("""
         CREATE TABLE IF NOT EXISTS inventory (
             user_id INTEGER,
             item TEXT,
-            amount INTEGER,
+            amount INTEGER DEFAULT 0,
             PRIMARY KEY(user_id, item)
         )
     """)
 
-    cur.execute("""
+    c.execute("""
         CREATE TABLE IF NOT EXISTS titles (
             user_id INTEGER,
             title TEXT,
@@ -377,16 +364,16 @@ def init_db():
         )
     """)
 
-    cur.execute("""
+    c.execute("""
         CREATE TABLE IF NOT EXISTS hats (
             user_id INTEGER,
             hat TEXT,
-            amount INTEGER,
+            amount INTEGER DEFAULT 0,
             PRIMARY KEY(user_id, hat)
         )
     """)
 
-    cur.execute("""
+    c.execute("""
         CREATE TABLE IF NOT EXISTS quotes (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER,
@@ -395,7 +382,7 @@ def init_db():
         )
     """)
 
-    cur.execute("""
+    c.execute("""
         CREATE TABLE IF NOT EXISTS cooldowns (
             user_id INTEGER PRIMARY KEY,
             work_until INTEGER DEFAULT 0
@@ -407,72 +394,49 @@ def init_db():
 
 
 def ensure_user(user_id):
-    conn = db()
-    cur = conn.cursor()
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
 
-    cur.execute(
+    c.execute(
         "SELECT user_id FROM users WHERE user_id = ?",
         (user_id,)
     )
 
-    if not cur.fetchone():
-        cur.execute(
-            """
+    if c.fetchone() is None:
+        c.execute("""
             INSERT INTO users
             (user_id, coins, level, xp, scrap, metal, mvk)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-            """,
-            (user_id, 50, 1, 0, 0, 0, 0)
-        )
+            VALUES (?, 50, 1, 0, 0, 0, 0)
+        """, (user_id,))
 
     conn.commit()
     conn.close()
 
 
-def get_user(user_id):
+def get_balance(user_id):
     ensure_user(user_id)
 
-    conn = db()
-    cur = conn.cursor()
-
-    cur.execute(
-        """
-        SELECT
-            user_id,
-            coins,
-            wins,
-            losses,
-            title,
-            showcase_item,
-            level,
-            xp,
-            scrap,
-            metal,
-            mvk,
-            hat
-        FROM users
-        WHERE user_id = ?
-        """,
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+    c.execute(
+        "SELECT coins FROM users WHERE user_id = ?",
         (user_id,)
     )
-
-    row = cur.fetchone()
+    result = c.fetchone()
     conn.close()
 
-    return row
+    return result[0]
 
 
 def add_coins(user_id, amount):
     ensure_user(user_id)
 
-    conn = db()
-    cur = conn.cursor()
-
-    cur.execute(
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+    c.execute(
         "UPDATE users SET coins = coins + ? WHERE user_id = ?",
         (amount, user_id)
     )
-
     conn.commit()
     conn.close()
 
@@ -480,21 +444,21 @@ def add_coins(user_id, amount):
 def remove_coins(user_id, amount):
     ensure_user(user_id)
 
-    conn = db()
-    cur = conn.cursor()
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
 
-    cur.execute(
+    c.execute(
         "SELECT coins FROM users WHERE user_id = ?",
         (user_id,)
     )
 
-    row = cur.fetchone()
+    balance = c.fetchone()[0]
 
-    if not row or row[0] < amount:
+    if balance < amount:
         conn.close()
         return False
 
-    cur.execute(
+    c.execute(
         "UPDATE users SET coins = coins - ? WHERE user_id = ?",
         (amount, user_id)
     )
@@ -505,32 +469,93 @@ def remove_coins(user_id, amount):
     return True
 
 
-def xp_needed(level):
-    return 100 + (level - 1) * 25
+def add_item(user_id, item, amount=1):
+    ensure_user(user_id)
+
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+
+    c.execute("""
+        INSERT INTO inventory (user_id, item, amount)
+        VALUES (?, ?, ?)
+        ON CONFLICT(user_id, item)
+        DO UPDATE SET amount = amount + excluded.amount
+    """, (user_id, item, amount))
+
+    conn.commit()
+    conn.close()
+
+
+def add_hat(user_id, hat, amount=1):
+    ensure_user(user_id)
+
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+
+    c.execute("""
+        INSERT INTO hats (user_id, hat, amount)
+        VALUES (?, ?, ?)
+        ON CONFLICT(user_id, hat)
+        DO UPDATE SET amount = amount + excluded.amount
+    """, (user_id, hat, amount))
+
+    conn.commit()
+    conn.close()
+
+
+def get_hat_inventory(user_id):
+    ensure_user(user_id)
+
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+
+    c.execute(
+        "SELECT hat, amount FROM hats WHERE user_id = ? AND amount > 0",
+        (user_id,)
+    )
+
+    result = c.fetchall()
+    conn.close()
+
+    return result
+
+
+def has_hat(user_id, hat):
+    ensure_user(user_id)
+
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+
+    c.execute(
+        "SELECT amount FROM hats WHERE user_id = ? AND hat = ?",
+        (user_id, hat)
+    )
+
+    result = c.fetchone()
+    conn.close()
+
+    return result is not None and result[0] > 0
 
 
 def add_xp(user_id, amount):
     ensure_user(user_id)
 
-    conn = db()
-    cur = conn.cursor()
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
 
-    cur.execute(
+    c.execute(
         "SELECT level, xp FROM users WHERE user_id = ?",
         (user_id,)
     )
 
-    level, xp = cur.fetchone()
-
+    level, xp = c.fetchone()
     xp += amount
-    leveled_up = False
 
-    while xp >= xp_needed(level):
-        xp -= xp_needed(level)
+    while xp >= level * 100:
+        xp -= level * 100
         level += 1
-        leveled_up = True
 
-    cur.execute(
+    c.execute(
         "UPDATE users SET level = ?, xp = ? WHERE user_id = ?",
         (level, xp, user_id)
     )
@@ -538,718 +563,183 @@ def add_xp(user_id, amount):
     conn.commit()
     conn.close()
 
-    return level, xp, leveled_up
 
+def get_scrap_reward(item):
+    rarity = items[item]["rarity"]
 
-def get_work_cooldown(user_id):
-    conn = db()
-    cur = conn.cursor()
+    if rarity == "common":
+        return 2, 0, 0
 
-    cur.execute(
-        "SELECT work_until FROM cooldowns WHERE user_id = ?",
-        (user_id,)
-    )
+    if rarity == "uncommon":
+        return 2, 1, 0
 
-    row = cur.fetchone()
-    conn.close()
+    if rarity == "rare":
+        return 0, 3, 0
 
-    if not row:
-        return 0
+    if rarity == "epic":
+        return 0, 1, 1
 
-    return row[0]
+    if rarity == "legendary":
+        return 0, 0, 2
 
+    if rarity == "artifact":
+        return 0, 0, 4
 
-def set_work_cooldown(user_id, timestamp):
-    conn = db()
-    cur = conn.cursor()
-
-    cur.execute(
-        "SELECT user_id FROM cooldowns WHERE user_id = ?",
-        (user_id,)
-    )
-
-    if cur.fetchone():
-        cur.execute(
-            "UPDATE cooldowns SET work_until = ? WHERE user_id = ?",
-            (timestamp, user_id)
-        )
-    else:
-        cur.execute(
-            "INSERT INTO cooldowns (user_id, work_until) VALUES (?, ?)",
-            (user_id, timestamp)
-        )
-
-    conn.commit()
-    conn.close()
-
-
-def add_win(user_id):
-    ensure_user(user_id)
-
-    conn = db()
-    cur = conn.cursor()
-
-    cur.execute(
-        "UPDATE users SET wins = wins + 1 WHERE user_id = ?",
-        (user_id,)
-    )
-
-    conn.commit()
-    conn.close()
-
-
-def add_loss(user_id):
-    ensure_user(user_id)
-
-    conn = db()
-    cur = conn.cursor()
-
-    cur.execute(
-        "UPDATE users SET losses = losses + 1 WHERE user_id = ?",
-        (user_id,)
-    )
-
-    conn.commit()
-    conn.close()
-
-
-def add_item(user_id, item):
-    ensure_user(user_id)
-
-    conn = db()
-    cur = conn.cursor()
-
-    cur.execute(
-        "SELECT amount FROM inventory WHERE user_id = ? AND item = ?",
-        (user_id, item)
-    )
-
-    row = cur.fetchone()
-
-    if row:
-        cur.execute(
-            """
-            UPDATE inventory
-            SET amount = amount + 1
-            WHERE user_id = ? AND item = ?
-            """,
-            (user_id, item)
-        )
-    else:
-        cur.execute(
-            """
-            INSERT INTO inventory
-            (user_id, item, amount)
-            VALUES (?, ?, 1)
-            """,
-            (user_id, item)
-        )
-
-    conn.commit()
-    conn.close()
-
-
-def remove_item(user_id, item, amount=1):
-    ensure_user(user_id)
-
-    conn = db()
-    cur = conn.cursor()
-
-    cur.execute(
-        """
-        SELECT amount
-        FROM inventory
-        WHERE user_id = ? AND item = ?
-        """,
-        (user_id, item)
-    )
-
-    row = cur.fetchone()
-
-    if not row or row[0] < amount:
-        conn.close()
-        return False
-
-    new_amount = row[0] - amount
-
-    if new_amount <= 0:
-        cur.execute(
-            """
-            DELETE FROM inventory
-            WHERE user_id = ? AND item = ?
-            """,
-            (user_id, item)
-        )
-    else:
-        cur.execute(
-            """
-            UPDATE inventory
-            SET amount = ?
-            WHERE user_id = ? AND item = ?
-            """,
-            (new_amount, user_id, item)
-        )
-
-    conn.commit()
-    conn.close()
-
-    return True
-
-
-def get_inventory(user_id):
-    ensure_user(user_id)
-
-    conn = db()
-    cur = conn.cursor()
-
-    cur.execute(
-        """
-        SELECT item, amount
-        FROM inventory
-        WHERE user_id = ?
-        ORDER BY amount DESC
-        """,
-        (user_id,)
-    )
-
-    rows = cur.fetchall()
-    conn.close()
-
-    return rows
-
-
-def add_title(user_id, title):
-    ensure_user(user_id)
-
-    conn = db()
-    cur = conn.cursor()
-
-    cur.execute(
-        """
-        INSERT OR IGNORE INTO titles
-        (user_id, title)
-        VALUES (?, ?)
-        """,
-        (user_id, title)
-    )
-
-    conn.commit()
-    conn.close()
-
-
-def get_titles(user_id):
-    ensure_user(user_id)
-
-    conn = db()
-    cur = conn.cursor()
-
-    cur.execute(
-        "SELECT title FROM titles WHERE user_id = ?",
-        (user_id,)
-    )
-
-    rows = cur.fetchall()
-    conn.close()
-
-    return [row[0] for row in rows]
-
-
-def set_title(user_id, title):
-    ensure_user(user_id)
-
-    conn = db()
-    cur = conn.cursor()
-
-    cur.execute(
-        "UPDATE users SET title = ? WHERE user_id = ?",
-        (title, user_id)
-    )
-
-    conn.commit()
-    conn.close()
-
-
-def set_showcase(user_id, item):
-    ensure_user(user_id)
-
-    conn = db()
-    cur = conn.cursor()
-
-    cur.execute(
-        """
-        UPDATE users
-        SET showcase_item = ?
-        WHERE user_id = ?
-        """,
-        (item, user_id)
-    )
-
-    conn.commit()
-    conn.close()
-
-
-def clear_showcase(user_id):
-    ensure_user(user_id)
-
-    conn = db()
-    cur = conn.cursor()
-
-    cur.execute(
-        """
-        UPDATE users
-        SET showcase_item = NULL
-        WHERE user_id = ?
-        """,
-        (user_id,)
-    )
-
-    conn.commit()
-    conn.close()
-
-
-def set_hat(user_id, hat):
-    ensure_user(user_id)
-
-    conn = db()
-    cur = conn.cursor()
-
-    cur.execute(
-        "UPDATE users SET hat = ? WHERE user_id = ?",
-        (hat, user_id)
-    )
-
-    conn.commit()
-    conn.close()
-
-
-def clear_hat(user_id):
-    set_hat(user_id, None)
-
-
-def get_materials(user_id):
-    row = get_user(user_id)
-
-    return {
-        "скрап": row[8],
-        "метал": row[9],
-        "мвк": row[10]
-    }
-
-
-def add_material(user_id, material, amount):
-    ensure_user(user_id)
-
-    column = {
-        "скрап": "scrap",
-        "метал": "metal",
-        "мвк": "mvk"
-    }.get(material)
-
-    if not column:
-        return
-
-    conn = db()
-    cur = conn.cursor()
-
-    cur.execute(
-        f"UPDATE users SET {column} = {column} + ? WHERE user_id = ?",
-        (amount, user_id)
-    )
-
-    conn.commit()
-    conn.close()
-
-
-def remove_material(user_id, material, amount):
-    materials_data = get_materials(user_id)
-
-    if materials_data.get(material, 0) < amount:
-        return False
-
-    column = {
-        "скрап": "scrap",
-        "метал": "metal",
-        "мвк": "mvk"
-    }.get(material)
-
-    if not column:
-        return False
-
-    conn = db()
-    cur = conn.cursor()
-
-    cur.execute(
-        f"UPDATE users SET {column} = {column} - ? WHERE user_id = ?",
-        (amount, user_id)
-    )
-
-    conn.commit()
-    conn.close()
-
-    return True
-
-
-def get_hat_inventory(user_id):
-    ensure_user(user_id)
-
-    conn = db()
-    cur = conn.cursor()
-
-    cur.execute(
-        """
-        SELECT hat, amount
-        FROM hats
-        WHERE user_id = ?
-        ORDER BY amount DESC
-        """,
-        (user_id,)
-    )
-
-    rows = cur.fetchall()
-    conn.close()
-
-    return rows
-
-
-def add_hat(user_id, hat):
-    ensure_user(user_id)
-
-    conn = db()
-    cur = conn.cursor()
-
-    cur.execute(
-        "SELECT amount FROM hats WHERE user_id = ? AND hat = ?",
-        (user_id, hat)
-    )
-
-    row = cur.fetchone()
-
-    if row:
-        cur.execute(
-            """
-            UPDATE hats
-            SET amount = amount + 1
-            WHERE user_id = ? AND hat = ?
-            """,
-            (user_id, hat)
-        )
-    else:
-        cur.execute(
-            """
-            INSERT INTO hats
-            (user_id, hat, amount)
-            VALUES (?, ?, 1)
-            """,
-            (user_id, hat)
-        )
-
-    conn.commit()
-    conn.close()
-
-
-def has_hat(user_id, hat):
-    ensure_user(user_id)
-
-    conn = db()
-    cur = conn.cursor()
-
-    cur.execute(
-        """
-        SELECT amount
-        FROM hats
-        WHERE user_id = ? AND hat = ?
-        """,
-        (user_id, hat)
-    )
-
-    row = cur.fetchone()
-    conn.close()
-
-    return bool(row and row[0] > 0)
-
-
-def add_quote(user_id, author, content):
-    conn = db()
-    cur = conn.cursor()
-
-    try:
-        cur.execute(
-            """
-            INSERT INTO quotes
-            (user_id, author, content)
-            VALUES (?, ?, ?)
-            """,
-            (user_id, author, content)
-        )
-
-        conn.commit()
-        added = True
-
-    except sqlite3.IntegrityError:
-        added = False
-
-    conn.close()
-
-    return added
-
-
-def get_random_quote():
-    conn = db()
-    cur = conn.cursor()
-
-    cur.execute(
-        """
-        SELECT author, content
-        FROM quotes
-        ORDER BY RANDOM()
-        LIMIT 1
-        """
-    )
-
-    row = cur.fetchone()
-    conn.close()
-
-    return row
-
-
-def find_case(name):
-    name = name.lower().strip()
-
-    for case_name in cases:
-        if name == case_name.lower():
-            return case_name
-
-    for case_name in cases:
-        if name in case_name.lower():
-            return case_name
-
-    return None
-
-
-def roll_case_item(case_name):
-    loot = cases[case_name]["loot"]
-
-    total = sum(
-        weight
-        for item, weight in loot
-    )
-
-    roll = random.uniform(0, total)
-    current = 0
-
-    for item, weight in loot:
-        current += weight
-
-        if roll <= current:
-            return item
-
-    return loot[-1][0]
-
-
-def roll_case(case_name):
-    data = cases[case_name]
-
-    money = random.randint(
-        data["money"][0],
-        data["money"][1]
-    )
-
-    item = None
-
-    if random.random() < data["item_chance"]:
-        item = roll_case_item(case_name)
-
-    return money, item
+    return 0, 0, 0
 
 
 def case_value(money, item):
     value = money
 
     if item:
-        value += int(
-            items[item]["price"] * 0.7
-        )
+        value += items[item]["price"] * 0.7
 
     return value
 
 
-def get_scrap_reward(item):
-    rarity = items[item]["rarity"]
+def roll_case(case_name):
+    case = cases[case_name]
 
-    if "Обычный" in rarity:
-        return {
-            "скрап": 2
-        }
+    money = random.randint(
+        case["money"][0],
+        case["money"][1]
+    )
 
-    if "Необычный" in rarity:
-        return {
-            "скрап": 2,
-            "метал": 1
-        }
+    item = None
 
-    if "Редкий" in rarity:
-        return {
-            "метал": 3
-        }
+    if random.random() <= case["item_chance"]:
+        names = list(case["loot"].keys())
+        weights = list(case["loot"].values())
+        item = random.choices(names, weights=weights, k=1)[0]
 
-    if "Эпический" in rarity:
-        return {
-            "метал": 1,
-            "мвк": 1
-        }
-
-    if "Легендарный" in rarity:
-        return {
-            "мвк": 2
-        }
-
-    if "Артефакт" in rarity:
-        return {
-            "мвк": 4
-        }
-
-    return {}
-
-
-def format_materials(rewards):
-    result = []
-
-    for material, amount in rewards.items():
-        result.append(
-            f"{materials[material]['name']} × **{amount}**"
-        )
-
-    return "\n".join(result)
+    return money, item
 
 
 def roll_hat(material):
-    available = []
+    available = [
+        hat for hat, data in hats.items()
+        if data["material"] == material
+    ]
 
-    for hat, data in hats.items():
-        if data["material"] == material:
-            available.append(
-                (hat, data["weight"])
-            )
+    weights = [
+        hats[hat]["weight"]
+        for hat in available
+    ]
 
-    if not available:
-        return None
+    return random.choices(
+        available,
+        weights=weights,
+        k=1
+    )[0]
 
-    total = sum(
-        weight
-        for hat, weight in available
+
+def normalize_name(text):
+    return " ".join(text.strip().lower().split())
+
+
+def find_item_in_inventory(user_id, input_name):
+    normalized = normalize_name(input_name)
+
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+
+    c.execute(
+        "SELECT item, amount FROM inventory WHERE user_id = ? AND amount > 0",
+        (user_id,)
     )
 
-    roll = random.uniform(0, total)
-    current = 0
+    inventory = c.fetchall()
+    conn.close()
 
-    for hat, weight in available:
-        current += weight
+    for item, amount in inventory:
+        if normalize_name(item) == normalized:
+            return item, amount
 
-        if roll <= current:
-            return hat
+    input_without_emoji = normalized.split(" ", 1)[1] if " " in normalized else normalized
 
-    return available[-1][0]
+    for item, amount in inventory:
+        item_without_emoji = normalize_name(item)
+        if " " in item_without_emoji:
+            item_without_emoji = item_without_emoji.split(" ", 1)[1]
+
+        if item_without_emoji == input_without_emoji:
+            return item, amount
+
+    return None, 0
 
 
-async def money_drop_loop():
-    global active_drop
+def find_hat_in_inventory(user_id, input_name):
+    normalized = normalize_name(input_name)
 
-    await bot.wait_until_ready()
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
 
-    while not bot.is_closed():
-        await asyncio.sleep(
-            random.randint(
-                600,
-                2400
-            )
-        )
+    c.execute(
+        "SELECT hat, amount FROM hats WHERE user_id = ? AND amount > 0",
+        (user_id,)
+    )
 
-        channel = bot.get_channel(
-            DROP_CHANNEL_ID
-        )
+    inventory = c.fetchall()
+    conn.close()
 
-        if not channel:
-            continue
+    for hat, amount in inventory:
+        if normalize_name(hat) == normalized:
+            return hat, amount
 
-        roll = random.random()
+    input_without_emoji = normalized.split(" ", 1)[1] if " " in normalized else normalized
 
-        if roll < 0.003:
-            amount = random.randint(
-                200,
-                400
-            )
+    for hat, amount in inventory:
+        hat_without_emoji = normalize_name(hat)
 
-            drop_type = "👑 **УЛЬТРА-ДРОП!**"
+        if " " in hat_without_emoji:
+            hat_without_emoji = hat_without_emoji.split(" ", 1)[1]
 
-        elif roll < 0.015:
-            amount = random.randint(
-                80,
-                180
-            )
+        if hat_without_emoji == input_without_emoji:
+            return hat, amount
 
-            drop_type = "💎 **МЕГА-ДРОП!**"
+    return None, 0
 
-        elif roll < 0.06:
-            amount = random.randint(
-                30,
-                80
-            )
 
-            drop_type = "🔥 **ЖИРНЫЙ ДРОП!**"
+def get_title_inventory(user_id):
+    ensure_user(user_id)
 
-        else:
-            amount = random.randint(
-                5,
-                30
-            )
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
 
-            drop_type = "💸 **ДЕНЕЖНЫЙ ДРОП!**"
+    c.execute(
+        "SELECT title FROM titles WHERE user_id = ?",
+        (user_id,)
+    )
 
-        active_drop = {
-            "amount": amount,
-            "claimed": False
-        }
+    result = [row[0] for row in c.fetchall()]
+    conn.close()
 
-        role = discord.utils.get(
-            channel.guild.roles,
-            name=DROP_ROLE_NAME
-        )
+    return result
 
-        if role:
-            ping = role.mention
-        else:
-            ping = ""
 
-        await channel.send(
-            f"{ping}\n"
-            f"{drop_type}\n"
-            f"Кто первый напишет `!забрать`, тот получает "
-            f"**{amount:,} монет**!\n"
-            f"⏳ У вас **30 секунд**!"
-        )
+def add_title(user_id, title):
+    ensure_user(user_id)
 
-        await asyncio.sleep(30)
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
 
-        if active_drop and not active_drop["claimed"]:
-            active_drop = None
+    c.execute("""
+        INSERT OR IGNORE INTO titles (user_id, title)
+        VALUES (?, ?)
+    """, (user_id, title))
 
-            await channel.send(
-                "💨 **Дроп протух.** Никто не успел его забрать."
-            )
+    conn.commit()
+    conn.close()
 
 
 class InventoryView(discord.ui.View):
     def __init__(self, user_id):
-        super().__init__(
-            timeout=120
-        )
-
+        super().__init__(timeout=120)
         self.user_id = user_id
 
     @discord.ui.button(
         label="Продать всё",
-        style=discord.ButtonStyle.green,
-        emoji="💸"
+        style=discord.ButtonStyle.green
     )
     async def sell_all(
         self,
@@ -1263,76 +753,64 @@ class InventoryView(discord.ui.View):
             )
             return
 
-        inventory = get_inventory(
-            self.user_id
+        ensure_user(self.user_id)
+
+        conn = sqlite3.connect(DB)
+        c = conn.cursor()
+
+        c.execute(
+            "SELECT item, amount FROM inventory WHERE user_id = ?",
+            (self.user_id,)
         )
 
-        total = 0
-        sold = 0
+        inventory = c.fetchall()
 
-        for item, amount in inventory:
-            if item not in items:
-                continue
+        if not inventory:
+            conn.close()
 
-            sell_price = int(
-                items[item]["price"] * 0.7
-            )
-
-            total += sell_price * amount
-            sold += amount
-
-        if sold == 0:
             await interaction.response.send_message(
-                "❌ Продавать нечего.",
+                "❌ У тебя нет обычных предметов для продажи.",
                 ephemeral=True
             )
             return
 
-        conn = db()
-        cur = conn.cursor()
+        total = 0
 
-        cur.execute(
+        for item, amount in inventory:
+            if item in items:
+                total += items[item]["price"] * amount
+
+        c.execute(
             "DELETE FROM inventory WHERE user_id = ?",
             (self.user_id,)
+        )
+
+        c.execute(
+            "UPDATE users SET coins = coins + ? WHERE user_id = ?",
+            (total, self.user_id)
         )
 
         conn.commit()
         conn.close()
 
-        add_coins(
-            self.user_id,
-            total
-        )
-
         await interaction.response.send_message(
-            f"💸 **ПРОДАНО ВСЁ!**\n\n"
-            f"📦 Предметов: **{sold}**\n"
-            f"💰 Получено: **{total:,} монет**\n\n"
-            f"👑 Титулы и 🧢 шапки продажей не затронуты."
+            f"💰 Продано всех обычных предметов на **{total}** монет.\n"
+            f"🏆 Титулы и 🎩 шапки не затронуты."
         )
 
 
 class MogBattleView(discord.ui.View):
-    def __init__(
-        self,
-        challenger,
-        opponent,
-        case_name
-    ):
-        super().__init__(
-            timeout=30
-        )
+    def __init__(self, challenger, opponent, case_name):
+        super().__init__(timeout=60)
 
         self.challenger = challenger
         self.opponent = opponent
         self.case_name = case_name
         self.accepted = None
-        self.message = None
 
     @discord.ui.button(
         label="Принять",
-        style=discord.ButtonStyle.green,
-        emoji="⚔️"
+        style=discord.ButtonStyle.green
     )
     async def accept(
         self,
@@ -1341,690 +819,318 @@ class MogBattleView(discord.ui.View):
     ):
         if interaction.user.id != self.opponent.id:
             await interaction.response.send_message(
-                "❌ Это не твой вызов.",
+                "❌ Это приглашение не для тебя.",
                 ephemeral=True
             )
             return
 
         if self.accepted is not None:
             await interaction.response.send_message(
-                "❌ Этот мог-батл уже обработан.",
+                "❌ Баттл уже обработан.",
                 ephemeral=True
             )
-            return
-
-        self.accepted = False
-
-        user1 = get_user(
-            self.challenger.id
-        )
-
-        user2 = get_user(
-            self.opponent.id
-        )
-
-        price = cases[
-            self.case_name
-        ]["price"]
-
-        required_level = cases[
-            self.case_name
-        ]["unlock_level"]
-
-        if user1[6] < required_level:
-            await interaction.response.edit_message(
-                content=(
-                    f"❌ {self.challenger.mention} больше не имеет "
-                    f"доступа к этому кейсу."
-                ),
-                view=None
-            )
-
-            self.stop()
-            return
-
-        if user2[6] < required_level:
-            await interaction.response.edit_message(
-                content=(
-                    f"❌ {self.opponent.mention} ещё не достиг "
-                    f"**{required_level} уровня**."
-                ),
-                view=None
-            )
-
-            self.stop()
-            return
-
-        if user1[1] < price:
-            for child in self.children:
-                child.disabled = True
-
-            await interaction.response.edit_message(
-                content=(
-                    f"❌ {self.challenger.mention} уже не может оплатить "
-                    f"**{price:,} монет** за этот мог-батл."
-                ),
-                view=self
-            )
-
-            self.stop()
-            return
-
-        if user2[1] < price:
-            for child in self.children:
-                child.disabled = True
-
-            await interaction.response.edit_message(
-                content=(
-                    f"❌ {self.opponent.mention} не может оплатить "
-                    f"**{price:,} монет** за этот мог-батл."
-                ),
-                view=self
-            )
-
-            self.stop()
             return
 
         self.accepted = True
 
-        remove_coins(
-            self.challenger.id,
-            price
-        )
+        case_price = cases[self.case_name]["price"]
 
-        remove_coins(
-            self.opponent.id,
-            price
-        )
-
-        for child in self.children:
-            child.disabled = True
-
-        await interaction.response.edit_message(
-            content=(
-                f"⚔️ **МОГ-БАТЛ НАЧИНАЕТСЯ!**\n\n"
-                f"📦 Кейс: **{self.case_name}**\n"
-                f"💰 Ставка каждого: **{price:,} монет**\n"
-                f"🏆 Банк: **{price * 2:,} монет**\n\n"
-                f"🎲 Открываем кейсы..."
-            ),
-            view=self
-        )
-
-        await asyncio.sleep(1.5)
-
-        money1, item1 = roll_case(
-            self.case_name
-        )
-
-        money2, item2 = roll_case(
-            self.case_name
-        )
-
-        value1 = case_value(
-            money1,
-            item1
-        )
-
-        value2 = case_value(
-            money2,
-            item2
-        )
-
-        result1 = f"💰 {money1:,} монет"
-
-        if item1:
-            result1 += (
-                f"\n🎁 {item1}"
-                f"\n{items[item1]['rarity']}"
+        if get_balance(self.challenger.id) < case_price:
+            await interaction.response.edit_message(
+                content="❌ У вызывающего больше нет денег на кейс.",
+                view=None
             )
+            self.stop()
+            return
 
-        result2 = f"💰 {money2:,} монет"
-
-        if item2:
-            result2 += (
-                f"\n🎁 {item2}"
-                f"\n{items[item2]['rarity']}"
+        if get_balance(self.opponent.id) < case_price:
+            await interaction.response.edit_message(
+                content="❌ У соперника недостаточно денег на кейс.",
+                view=None
             )
+            self.stop()
+            return
 
-        if item1:
-            add_item(
-                self.challenger.id,
-                item1
-            )
+        remove_coins(self.challenger.id, case_price)
+        remove_coins(self.opponent.id, case_price)
 
-        if item2:
-            add_item(
-                self.opponent.id,
-                item2
-            )
+        challenger_money, challenger_item = roll_case(self.case_name)
+        opponent_money, opponent_item = roll_case(self.case_name)
 
-        add_coins(
-            self.challenger.id,
-            money1
+        if challenger_money:
+            add_coins(self.challenger.id, challenger_money)
+
+        if opponent_money:
+            add_coins(self.opponent.id, opponent_money)
+
+        if challenger_item:
+            add_item(self.challenger.id, challenger_item)
+
+        if opponent_item:
+            add_item(self.opponent.id, opponent_item)
+
+        challenger_value = case_value(
+            challenger_money,
+            challenger_item
         )
 
-        add_coins(
-            self.opponent.id,
-            money2
+        opponent_value = case_value(
+            opponent_money,
+            opponent_item
         )
 
-        xp_gain = max(
-            2,
-            min(
-                10,
-                price // 100
-            )
-        )
+        pot = case_price * 2
 
-        level1, xp1, leveled1 = add_xp(
-            self.challenger.id,
-            xp_gain
-        )
-
-        level2, xp2, leveled2 = add_xp(
-            self.opponent.id,
-            xp_gain
-        )
-
-        bank = price * 2
-
-        if value1 > value2:
+        if challenger_value > opponent_value:
             winner = self.challenger
             loser = self.opponent
+            winner_value = challenger_value
+            loser_value = opponent_value
 
-            add_coins(
-                winner.id,
-                bank
-            )
-
-            add_win(
-                winner.id
-            )
-
-            add_loss(
-                loser.id
-            )
-
-            result = (
-                f"🏆 **{winner.mention} МОГНУЛ!**\n"
-                f"💰 Забирает весь банк: **{bank:,} монет**"
-            )
-
-        elif value2 > value1:
+        elif opponent_value > challenger_value:
             winner = self.opponent
             loser = self.challenger
-
-            add_coins(
-                winner.id,
-                bank
-            )
-
-            add_win(
-                winner.id
-            )
-
-            add_loss(
-                loser.id
-            )
-
-            result = (
-                f"🏆 **{winner.mention} МОГНУЛ!**\n"
-                f"💰 Забирает весь банк: **{bank:,} монет**"
-            )
+            winner_value = opponent_value
+            loser_value = challenger_value
 
         else:
-            add_coins(
-                self.challenger.id,
-                price
+            add_coins(self.challenger.id, case_price)
+            add_coins(self.opponent.id, case_price)
+
+            conn = sqlite3.connect(DB)
+            c = conn.cursor()
+
+            c.execute(
+                "UPDATE users SET losses = losses WHERE user_id = ?",
+                (self.challenger.id,)
             )
 
-            add_coins(
-                self.opponent.id,
-                price
+            conn.commit()
+            conn.close()
+
+            await interaction.response.edit_message(
+                content=(
+                    f"⚔️ **МОГ-БАТТЛ**\n\n"
+                    f"🎁 Кейс: **{self.case_name}**\n\n"
+                    f"{self.challenger.mention}: "
+                    f"**{challenger_value:.0f}**\n"
+                    f"{self.opponent.mention}: "
+                    f"**{opponent_value:.0f}**\n\n"
+                    f"🤝 Ничья! Ставки возвращены."
+                ),
+                view=None
             )
 
-            result = (
-                "🤝 **НИЧЬЯ!**\n"
-                f"💸 Каждый получил обратно свои "
-                f"**{price:,} монет**."
-            )
+            self.stop()
+            return
 
-        await interaction.followup.send(
-            f"⚔️ **МОГ-БАТЛ ЗАВЕРШЁН!**\n\n"
-            f"📦 Кейс: **{self.case_name}**\n\n"
-            f"👤 {self.challenger.mention}\n"
-            f"{result1}\n"
-            f"📊 Ценность дропа: **{value1:,}**\n\n"
-            f"👤 {self.opponent.mention}\n"
-            f"{result2}\n"
-            f"📊 Ценность дропа: **{value2:,}**\n\n"
-            f"━━━━━━━━━━━━━━\n"
-            f"{result}"
+        add_coins(winner.id, pot)
+
+        conn = sqlite3.connect(DB)
+        c = conn.cursor()
+
+        c.execute(
+            "UPDATE users SET wins = wins + 1 WHERE user_id = ?",
+            (winner.id,)
         )
 
-        self.stop()
+        c.execute(
+            "UPDATE users SET losses = losses + 1 WHERE user_id = ?",
+            (loser.id,)
+        )
 
-    @discord.ui.button(
-        label="Отказаться",
-        style=discord.ButtonStyle.red,
-        emoji="💀"
-    )
-    async def decline(
-        self,
-        interaction: discord.Interaction,
-        button: discord.ui.Button
-    ):
-        if interaction.user.id != self.opponent.id:
-            await interaction.response.send_message(
-                "❌ Это не твой вызов.",
-                ephemeral=True
-            )
-            return
+        conn.commit()
+        conn.close()
 
-        if self.accepted is not None:
-            await interaction.response.send_message(
-                "❌ Этот мог-батл уже обработан.",
-                ephemeral=True
-            )
-            return
+        add_xp(winner.id, 15)
+        add_xp(loser.id, 5)
 
-        self.accepted = False
+        challenger_drop = (
+            challenger_item if challenger_item else "💰 Только деньги"
+        )
 
-        for child in self.children:
-            child.disabled = True
+        opponent_drop = (
+            opponent_item if opponent_item else "💰 Только деньги"
+        )
 
         await interaction.response.edit_message(
             content=(
-                f"💀 {self.opponent.mention} "
-                f"**отказался от мог-батла.**\n"
-                f"{self.challenger.mention}, тебя не признали достойным."
+                f"⚔️ **МОГ-БАТТЛ**\n\n"
+                f"🎁 Кейс: **{self.case_name}**\n"
+                f"💰 Банк: **{pot}**\n\n"
+                f"{self.challenger.mention}\n"
+                f"└ {challenger_drop} + {challenger_money} монет\n"
+                f"└ Стоимость: **{challenger_value:.0f}**\n\n"
+                f"{self.opponent.mention}\n"
+                f"└ {opponent_drop} + {opponent_money} монет\n"
+                f"└ Стоимость: **{opponent_value:.0f}**\n\n"
+                f"🏆 Победитель: **{winner.mention}**\n"
+                f"💰 Получает весь банк: **{pot}**"
             ),
-            view=self
+            view=None
         )
 
         self.stop()
 
     async def on_timeout(self):
-        if self.accepted is not None:
-            return
-
         self.accepted = False
-
-        for child in self.children:
-            child.disabled = True
-
-        try:
-            await self.message.edit(
-                content=(
-                    f"⏱️ **Вызов истёк.**\n"
-                    f"{self.opponent.mention} слишком долго думал."
-                ),
-                view=self
-            )
-        except:
-            pass
+        self.stop()
 
 
 @bot.event
 async def on_ready():
     global drop_task
 
-    print(
-        f"Бот запущен как {bot.user}"
-    )
+    init_db()
+
+    print(f"Бот запущен: {bot.user}")
 
     if drop_task is None or drop_task.done():
-        drop_task = asyncio.create_task(
-            money_drop_loop()
-        )
-
-
-@bot.event
-async def on_raw_reaction_add(payload):
-    if bot.user and payload.user_id == bot.user.id:
-        return
-
-    if str(payload.emoji) != "🐊":
-        return
-
-    channel = bot.get_channel(
-        payload.channel_id
-    )
-
-    if not channel:
-        return
-
-    try:
-        message = await channel.fetch_message(
-            payload.message_id
-        )
-    except:
-        return
-
-    if message.author.bot:
-        return
-
-    crocodiles = 0
-
-    for reaction in message.reactions:
-        if str(reaction.emoji) == "🐊":
-            crocodiles = reaction.count
-            break
-
-    if crocodiles < 2:
-        return
-
-    quote = message.content.strip()
-
-    if not quote:
-        return
-
-    added = add_quote(
-        message.author.id,
-        str(message.author),
-        quote
-    )
-
-    if added:
-        try:
-            await channel.send(
-                f"📜 **ЦИТАТА ЗАФИКСИРОВАНА**\n"
-                f"> {quote[:1500]}\n"
-                f"— {message.author.mention}"
-            )
-        except:
-            pass
+        drop_task = asyncio.create_task(money_drop_loop())
 
 
 @bot.command()
 async def команды(ctx):
-    embed = discord.Embed(
-        title="💣 Бом бом",
-        description="Все команды бота:",
-        color=discord.Color.blurple()
-    )
-
-    embed.add_field(
-        name="💰 Экономика",
-        value=(
-            "`!баланс`\n"
-            "`!работа`\n"
-            "`!дать @user сумма`\n"
-            "`!выдать @user сумма`\n"
-            "`!топ`"
-        ),
-        inline=False
-    )
-
-    embed.add_field(
-        name="📦 Кейсы",
-        value=(
-            "`!кейсы`\n"
-            "`!кейс название`"
-        ),
-        inline=False
-    )
-
-    embed.add_field(
-        name="🎒 Инвентарь",
-        value=(
-            "`!инвентарь`\n"
-            "`!продать предмет`\n"
-            "`!витрина предмет`\n"
-            "`!витрина убрать`\n"
-            "Кнопка **💸 Продать всё**"
-        ),
-        inline=False
-    )
-
-    embed.add_field(
-        name="♻️ Ресурсы",
-        value=(
-            "`!ресурсы`\n"
-            "`!утилизировать предмет`"
-        ),
-        inline=False
-    )
-
-    embed.add_field(
-        name="🧢 Шапки",
-        value=(
-            "`!крафт шапка скрап`\n"
-            "`!крафт шапка метал`\n"
-            "`!крафт шапка мвк`\n"
-            "`!шапка название`\n"
-            "`!шапка убрать`"
-        ),
-        inline=False
-    )
-
-    embed.add_field(
-        name="👤 Профиль",
-        value=(
-            "`!профиль`\n"
-            "`!профиль @user`\n"
-            "`!титулы`\n"
-            "`!титул название`\n"
-            "`!титул убрать`"
-        ),
-        inline=False
-    )
-
-    embed.add_field(
-        name="⚔️ Мог-батл",
-        value=(
-            "`!могбатл @user кейс`\n"
-            "Вызывающий выбирает кейс.\n"
-            "Оба открывают один и тот же кейс."
-        ),
-        inline=False
-    )
-
-    embed.add_field(
-        name="🎮 Игры",
-        value=(
-            "`!кубик`\n"
-            "`!монетка`\n"
-            "`!угадай`"
-        ),
-        inline=False
-    )
-
-    embed.add_field(
-        name="💸 Дропы",
-        value=(
-            "`!забрать`\n"
-            "`!дроппинг`\n"
-            "Денежные дропы появляются раз в 10–40 минут.\n"
-            "Подписавшиеся получают пинг роли **Дроп**."
-        ),
-        inline=False
-    )
-
-    embed.add_field(
-        name="📜 Цитаты",
-        value=(
-            "`!цитата`\n\n"
-            "Поставь 🐊🐊 на сообщение — "
-            "оно автоматически станет цитатой."
-        ),
-        inline=False
-    )
-
-    embed.add_field(
-        name="🎌 Аниме",
-        value=(
-            "`!аниме_кейс`\n"
-            "Ключ: `📖 26 том магической битвы`"
-        ),
-        inline=False
-    )
-
     await ctx.send(
-        embed=embed
+        "**📜 КОМАНДЫ**\n\n"
+        "`!баланс` — баланс\n"
+        "`!дать @user количество` — передать деньги\n"
+        "`!выдать @user количество` — выдать деньги\n"
+        "`!работа` — работа\n"
+        "`!топ` — топ игроков\n"
+        "`!кейсы` — список кейсов\n"
+        "`!кейс название` — открыть кейс\n"
+        "`!инвентарь` — инвентарь\n"
+        "`!продать предмет` — продать предмет или шапку\n"
+        "`!утилизировать предмет` — утилизировать обычный предмет\n"
+        "`!ресурсы` — ресурсы\n"
+        "`!крафт шапка скрап/метал/мвк` — создать шапку\n"
+        "`!шапка название` — надеть шапку\n"
+        "`!шапка убрать` — снять шапку\n"
+        "`!витрина предмет` — поставить предмет на витрину\n"
+        "`!витрина убрать` — убрать витрину\n"
+        "`!профиль` — профиль\n"
+        "`!титулы` — список титулов\n"
+        "`!титул название` — установить титул\n"
+        "`!титул убрать` — убрать титул\n"
+        "`!аниме_кейс` — получить титул\n"
+        "`!кубик` — бросить кубик\n"
+        "`!монетка` — монетка\n"
+        "`!угадай` — угадать число\n"
+        "`!цитата` — случайная цитата\n"
+        "`!могбатл @user название_кейса` — вызвать на мог-баттл\n"
+        "`!забрать` — забрать дроп\n"
+        "`!дроппинг` — подписка на дропы"
     )
 
 
 @bot.command()
 async def баланс(ctx):
-    row = get_user(
-        ctx.author.id
-    )
+    balance = get_balance(ctx.author.id)
 
     await ctx.send(
-        f"💰 {ctx.author.mention}, у тебя "
-        f"**{row[1]:,} монет**."
+        f"💰 **{ctx.author.display_name}** имеет **{balance}** монет."
     )
 
 
 @bot.command()
-async def дать(
-    ctx,
-    member: discord.Member = None,
-    amount: int = None
-):
-    if not member or amount is None:
+async def дать(ctx, member: discord.Member = None, amount: int = None):
+    if member is None or amount is None:
         await ctx.send(
-            "❌ Используй:\n"
-            "`!дать @user сумма`"
+            "Использование: `!дать @user количество`"
         )
         return
 
     if member.id == ctx.author.id:
-        await ctx.send(
-            "💀 Самому себе нельзя."
-        )
-        return
-
-    if member.bot:
-        await ctx.send(
-            "🤖 Ботам деньги передавать нельзя."
-        )
+        await ctx.send("❌ Нельзя передавать деньги самому себе.")
         return
 
     if amount <= 0:
-        await ctx.send(
-            "❌ Сумма должна быть больше нуля."
-        )
+        await ctx.send("❌ Количество должно быть положительным.")
         return
 
-    if not remove_coins(
-        ctx.author.id,
-        amount
-    ):
-        await ctx.send(
-            "💸 У тебя недостаточно денег."
-        )
+    if not remove_coins(ctx.author.id, amount):
+        await ctx.send("❌ Недостаточно денег.")
         return
 
-    add_coins(
-        member.id,
-        amount
-    )
+    add_coins(member.id, amount)
 
     await ctx.send(
         f"💸 {ctx.author.mention} передал "
-        f"{member.mention} **{amount:,} монет**."
+        f"{member.mention} **{amount}** монет."
     )
 
 
 @bot.command()
 @commands.has_permissions(administrator=True)
-async def выдать(
-    ctx,
-    member: discord.Member = None,
-    amount: int = None
-):
-    if (
-        not member
-        or amount is None
-        or amount <= 0
-    ):
+async def выдать(ctx, member: discord.Member = None, amount: int = None):
+    if member is None or amount is None:
         await ctx.send(
-            "❌ Используй:\n"
-            "`!выдать @user сумма`"
+            "Использование: `!выдать @user количество`"
         )
         return
 
-    add_coins(
-        member.id,
-        amount
-    )
+    if amount <= 0:
+        await ctx.send("❌ Количество должно быть положительным.")
+        return
+
+    add_coins(member.id, amount)
 
     await ctx.send(
-        f"👑 {member.mention} получил "
-        f"**{amount:,} монет**."
+        f"💰 {member.mention} выдано **{amount}** монет."
     )
 
 
 @bot.command()
 async def работа(ctx):
-    ensure_user(
-        ctx.author.id
+    ensure_user(ctx.author.id)
+
+    now = int(time.time())
+
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+
+    c.execute(
+        "SELECT work_until FROM cooldowns WHERE user_id = ?",
+        (ctx.author.id,)
     )
 
-    now = int(
-        time.time()
-    )
+    result = c.fetchone()
+    work_until = result[0] if result else 0
 
-    cooldown_until = get_work_cooldown(
-        ctx.author.id
-    )
-
-    if now < cooldown_until:
-        remaining = cooldown_until - now
-
+    if now < work_until:
+        remaining = work_until - now
         hours = remaining // 3600
-        minutes = (
-            remaining % 3600
-        ) // 60
+        minutes = (remaining % 3600) // 60
+
+        conn.close()
 
         await ctx.send(
-            f"⏳ Ты уже работал.\n"
-            f"Попробуй через **{hours} ч. {minutes} мин.**"
+            f"⏳ Работа будет доступна через "
+            f"**{hours}ч {minutes}м**."
         )
-
         return
 
-    cooldown = 6 * 60 * 60
+    reward = random.randint(5, 25)
+    xp = random.randint(5, 9)
 
-    set_work_cooldown(
-        ctx.author.id,
-        now + cooldown
-    )
+    c.execute("""
+        INSERT INTO cooldowns (user_id, work_until)
+        VALUES (?, ?)
+        ON CONFLICT(user_id)
+        DO UPDATE SET work_until = excluded.work_until
+    """, (ctx.author.id, now + 21600))
 
-    money = random.randint(
-        5,
-        25
-    )
+    conn.commit()
+    conn.close()
 
-    add_coins(
-        ctx.author.id,
-        money
-    )
-
-    xp_gain = random.randint(
-        5,
-        9
-    )
-
-    level, xp, leveled_up = add_xp(
-        ctx.author.id,
-        xp_gain
-    )
+    add_coins(ctx.author.id, reward)
+    add_xp(ctx.author.id, xp)
 
     message = (
-        f"💼 Ты поработал и получил "
-        f"**{money:,} монет**.\n"
-        f"✨ Опыт: **+{xp_gain} XP**"
+        f"💼 Ты поработал и получил **{reward}** монет "
+        f"и **{xp} XP**."
     )
-
-    if leveled_up:
-        message += (
-            f"\n\n🎉 **НОВЫЙ УРОВЕНЬ!**\n"
-            f"Ты достиг **{level} уровня**!"
-        )
 
     if random.random() < 0.05:
         add_item(
@@ -2033,1003 +1139,854 @@ async def работа(ctx):
         )
 
         message += (
-            "\n\n📖 **ЧТО ЗА ХУЙНЯ**\n"
-            "Ты нашёл **26 том магической битвы**."
+            "\n📖 А ещё ты каким-то образом нашёл "
+            "**26 том магической битвы**!"
         )
 
-    await ctx.send(
-        message
-    )
+    await ctx.send(message)
 
 
 @bot.command()
 async def топ(ctx):
-    conn = db()
-    cur = conn.cursor()
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
 
-    cur.execute(
-        """
+    c.execute("""
         SELECT user_id, coins
         FROM users
         ORDER BY coins DESC
         LIMIT 10
-        """
-    )
+    """)
 
-    rows = cur.fetchall()
+    rows = c.fetchall()
     conn.close()
 
     text = "🏆 **ТОП БОГАЧЕЙ**\n\n"
 
-    for i, (user_id, coins) in enumerate(
-        rows,
-        1
-    ):
-        user = bot.get_user(
-            user_id
-        )
+    for index, (user_id, coins) in enumerate(rows, 1):
+        user = ctx.guild.get_member(user_id)
 
-        if user:
-            name = user.mention
-        else:
-            name = f"<@{user_id}>"
+        name = user.display_name if user else f"ID {user_id}"
 
-        text += (
-            f"**{i}.** {name} — "
-            f"💰 **{coins:,}**\n"
-        )
+        text += f"**{index}.** {name} — **{coins}** монет\n"
 
-    await ctx.send(
-        text
-    )
+    await ctx.send(text)
 
 
 @bot.command()
 async def кейсы(ctx):
-    row = get_user(
-        ctx.author.id
-    )
-
-    level = row[6]
-
-    text = (
-        f"📦 **ДОСТУПНЫЕ КЕЙСЫ**\n"
-        f"🎖️ Твой уровень: **{level}**\n\n"
-    )
+    text = "📦 **КЕЙСЫ**\n\n"
 
     for name, data in cases.items():
-        required = data["unlock_level"]
-
-        if level >= required:
-            status = "✅ Доступен"
-        else:
-            status = f"🔒 С {required} уровня"
-
         text += (
             f"{name}\n"
-            f"💰 Цена: **{data['price']:,}**\n"
-            f"{status}\n\n"
+            f"💰 Цена: **{data['price']}**\n"
+            f"🔓 Уровень: **{data['unlock']}**\n\n"
         )
 
-    text += (
-        "Использование:\n"
-        "`!кейс название`"
-    )
-
-    await ctx.send(
-        text
-    )
+    await ctx.send(text)
 
 
 @bot.command()
-async def кейс(
-    ctx,
-    *,
-    case_name=None
-):
+async def кейс(ctx, *, case_name=None):
     if not case_name:
         await ctx.send(
-            "❌ Ты забыл выбрать кейс.\n\n"
-            "Посмотри доступные кейсы через `!кейсы`.\n"
-            "Например:\n"
-            "`!кейс алмаз`"
+            "Использование: `!кейс название кейса`"
         )
         return
 
-    case_name = find_case(
-        case_name
+    found_case = None
+
+    for name in cases:
+        if name.lower() == case_name.lower():
+            found_case = name
+            break
+
+    if found_case is None:
+        await ctx.send("❌ Такого кейса нет.")
+        return
+
+    ensure_user(ctx.author.id)
+
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+
+    c.execute(
+        "SELECT level FROM users WHERE user_id = ?",
+        (ctx.author.id,)
     )
 
-    if not case_name:
+    level = c.fetchone()[0]
+    conn.close()
+
+    case_data = cases[found_case]
+
+    if level < case_data["unlock"]:
         await ctx.send(
-            "❌ Такого кейса нет.\n"
-            "Посмотри список через `!кейсы`."
+            f"🔒 Этот кейс открывается с **{case_data['unlock']} уровня**."
         )
         return
 
-    data = cases[
-        case_name
-    ]
-
-    user = get_user(
-        ctx.author.id
-    )
-
-    if user[6] < data["unlock_level"]:
-        await ctx.send(
-            f"🔒 **{case_name}** пока заблокирован.\n\n"
-            f"🎖️ Нужен **{data['unlock_level']} уровень**.\n"
-            f"Твой уровень: **{user[6]}**."
-        )
+    if not awaitable_remove_coins(ctx.author.id, case_data["price"]):
+        await ctx.send("❌ Недостаточно денег.")
         return
 
     async with case_open_lock:
-        if not remove_coins(
-            ctx.author.id,
-            data["price"]
-        ):
-            await ctx.send(
-                f"💸 Для этого кейса нужно "
-                f"**{data['price']:,} монет**."
-            )
-            return
+        money, item = roll_case(found_case)
 
-        await asyncio.sleep(1)
-
-        money, item = roll_case(
-            case_name
-        )
-
-        add_coins(
-            ctx.author.id,
-            money
-        )
-
-        xp_gain = max(
-            2,
-            min(
-                10,
-                data["price"] // 100
-            )
-        )
-
-        level, xp, leveled_up = add_xp(
-            ctx.author.id,
-            xp_gain
-        )
-
-        message = (
-            f"📦 **{case_name}**\n\n"
-            f"💰 Получено: **{money:,} монет**\n"
-            f"✨ Опыт: **+{xp_gain} XP**"
-        )
+        if money:
+            add_coins(ctx.author.id, money)
 
         if item:
-            add_item(
-                ctx.author.id,
-                item
-            )
+            add_item(ctx.author.id, item)
 
-            rarity = items[item]["rarity"]
-            price = items[item]["price"]
-            sell_price = int(
-                price * 0.7
-            )
+        add_xp(ctx.author.id, 5)
 
-            message += (
-                f"\n\n🎁 **ПРЕДМЕТ!**\n"
-                f"{item}\n"
-                f"{rarity} • 💰 {price:,} монет\n"
-                f"💸 При продаже: {sell_price:,}"
-            )
+    text = (
+        f"📦 **{found_case}** открыт!\n"
+        f"💰 Деньги: **{money}**"
+    )
 
-        else:
-            message += (
-                "\n\n📦 **В кейсе ничего особенного.**"
-            )
+    if item:
+        text += f"\n🎁 Предмет: **{item}**"
 
-        if leveled_up:
-            message += (
-                f"\n\n🎉 **НОВЫЙ УРОВЕНЬ!**\n"
-                f"Ты достиг **{level} уровня**!"
-            )
+    else:
+        text += "\n🎁 Предмет: ничего"
 
-        if random.random() < 0.005:
-            add_item(
-                ctx.author.id,
-                "📖 26 том магической битвы"
-            )
+    await ctx.send(text)
 
-            message += (
-                "\n\n📖 **ЧТО ЗА ХУЙНЯ**\n"
-                "Ты каким-то образом нашёл "
-                "**26 том магической битвы**.\n"
-                "Он нужен для `!аниме_кейс`."
-            )
 
-        await ctx.send(
-            message
-        )
+def awaitable_remove_coins(user_id, amount):
+    ensure_user(user_id)
+
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+
+    c.execute(
+        "SELECT coins FROM users WHERE user_id = ?",
+        (user_id,)
+    )
+
+    balance = c.fetchone()[0]
+
+    if balance < amount:
+        conn.close()
+        return False
+
+    c.execute(
+        "UPDATE users SET coins = coins - ? WHERE user_id = ?",
+        (amount, user_id)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return True
 
 
 @bot.command()
 async def инвентарь(ctx):
-    inventory = get_inventory(
-        ctx.author.id
+    ensure_user(ctx.author.id)
+
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+
+    c.execute(
+        "SELECT item, amount FROM inventory WHERE user_id = ? AND amount > 0",
+        (ctx.author.id,)
     )
 
-    materials_data = get_materials(
-        ctx.author.id
+    inventory = c.fetchall()
+
+    c.execute(
+        "SELECT scrap, metal, mvk, hat, showcase_item, title FROM users WHERE user_id = ?",
+        (ctx.author.id,)
     )
 
-    hat_inventory = get_hat_inventory(
-        ctx.author.id
-    )
+    user_data = c.fetchone()
 
-    text = (
-        f"🎒 **ИНВЕНТАРЬ {ctx.author.display_name}**\n\n"
-    )
+    conn.close()
+
+    scrap, metal, mvk, equipped_hat, showcase, title = user_data
+
+    text = f"🎒 **Инвентарь {ctx.author.display_name}**\n\n"
 
     if inventory:
+        text += "**📦 Предметы:**\n"
+
         for item, amount in inventory:
-            rarity = items.get(
-                item,
-                {}
-            ).get(
-                "rarity",
-                ""
-            )
+            text += f"{item} ×{amount}\n"
 
-            text += (
-                f"{item} × **{amount}** "
-                f"{rarity}\n"
-            )
     else:
-        text += "📦 Обычных предметов нет.\n"
-
-    text += "\n♻️ **РЕСУРСЫ**\n"
+        text += "📦 Предметов нет.\n"
 
     text += (
-        f"🪨 Скрап × **{materials_data['скрап']}**\n"
-        f"🔩 Метал × **{materials_data['метал']}**\n"
-        f"⚙️ МВК × **{materials_data['мвк']}**\n"
+        f"\n**♻️ Ресурсы:**\n"
+        f"🪨 Скрап: **{scrap}**\n"
+        f"🔩 Метал: **{metal}**\n"
+        f"⚙️ МВК: **{mvk}**\n"
     )
 
-    if hat_inventory:
-        text += "\n🧢 **ШАПКИ**\n"
+    user_hats = get_hat_inventory(ctx.author.id)
 
-        for hat, amount in hat_inventory:
-            text += (
-                f"{hat} × **{amount}**\n"
-            )
+    text += "\n**🎩 Шапки:**\n"
+
+    if user_hats:
+        for hat, amount in user_hats:
+            value = hats[hat]["value"]
+            text += f"{hat} ×{amount} — 💰 {value}\n"
+    else:
+        text += "Нет шапок.\n"
+
+    if equipped_hat:
+        text += f"\n🎩 Надета: **{equipped_hat}**"
+
+    if title:
+        text += f"\n🏆 Титул: **{title}**"
+
+    if showcase:
+        text += f"\n🖼️ Витрина: **{showcase}**"
 
     await ctx.send(
         text,
-        view=InventoryView(
-            ctx.author.id
-        )
+        view=InventoryView(ctx.author.id)
     )
 
 
 @bot.command()
-async def продать(
-    ctx,
-    *,
-    item=None
-):
-    if not item:
+async def продать(ctx, *, item_name=None):
+    if not item_name:
         await ctx.send(
-            "❌ Напиши предмет.\n"
-            "Например: `!продать Ubuntu`"
+            "Использование: `!продать название предмета`"
         )
         return
 
-    if "титул" in item.lower():
-        await ctx.send(
-            "❌ Титулы нельзя продавать."
-        )
+    ensure_user(ctx.author.id)
+
+    if "титул" in item_name.lower():
+        await ctx.send("❌ Титулы продавать нельзя.")
         return
 
-    if "шапка" in item.lower():
-        await ctx.send(
-            "❌ Шапки нельзя продавать."
-        )
-        return
-
-    inventory = get_inventory(
-        ctx.author.id
+    item, amount = find_item_in_inventory(
+        ctx.author.id,
+        item_name
     )
 
-    found = None
+    if item is not None:
+        price = items[item]["price"]
+        total = price * amount
 
-    for owned_item, amount in inventory:
-        if item.lower() == owned_item.lower():
-            found = owned_item
-            break
+        conn = sqlite3.connect(DB)
+        c = conn.cursor()
 
-    if not found:
-        for owned_item, amount in inventory:
-            if item.lower() in owned_item.lower():
-                found = owned_item
-                break
+        c.execute(
+            "DELETE FROM inventory WHERE user_id = ? AND item = ?",
+            (ctx.author.id, item)
+        )
 
-    if not found:
+        c.execute(
+            "UPDATE users SET coins = coins + ? WHERE user_id = ?",
+            (total, ctx.author.id)
+        )
+
+        conn.commit()
+        conn.close()
+
+        await ctx.send(
+            f"💰 Продано **{item}** ×{amount} "
+            f"за **{total}** монет."
+        )
+        return
+
+    hat, hat_amount = find_hat_in_inventory(
+        ctx.author.id,
+        item_name
+    )
+
+    if hat is not None:
+        price = hats[hat]["value"]
+        total = price * hat_amount
+
+        conn = sqlite3.connect(DB)
+        c = conn.cursor()
+
+        c.execute(
+            "DELETE FROM hats WHERE user_id = ? AND hat = ?",
+            (ctx.author.id, hat)
+        )
+
+        c.execute(
+            "UPDATE users SET coins = coins + ? WHERE user_id = ?",
+            (total, ctx.author.id)
+        )
+
+        conn.commit()
+        conn.close()
+
+        await ctx.send(
+            f"💰 Продана **{hat}** ×{hat_amount} "
+            f"за **{total}** монет."
+        )
+        return
+
+    await ctx.send(
+        "❌ У тебя нет такого предмета или шапки."
+    )
+
+
+@bot.command()
+async def утилизировать(ctx, *, item_name=None):
+    if not item_name:
+        await ctx.send(
+            "Использование: `!утилизировать название предмета`"
+        )
+        return
+
+    ensure_user(ctx.author.id)
+
+    hat, hat_amount = find_hat_in_inventory(
+        ctx.author.id,
+        item_name
+    )
+
+    if hat is not None:
+        await ctx.send(
+            "❌ Шапки нельзя утилизировать.\n"
+            f"💰 Продай её через `!продать {hat}` "
+            f"за **{hats[hat]['value']}** монет за штуку."
+        )
+        return
+
+    item, amount = find_item_in_inventory(
+        ctx.author.id,
+        item_name
+    )
+
+    if item is None:
         await ctx.send(
             "❌ У тебя нет такого предмета."
         )
         return
 
-    if found not in items:
-        await ctx.send(
-            "❌ Этот предмет нельзя продавать."
-        )
-        return
+    scrap, metal, mvk = get_scrap_reward(item)
 
-    price = items[found]["price"]
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
 
-    sell_price = int(
-        price * 0.7
+    c.execute(
+        "DELETE FROM inventory WHERE user_id = ? AND item = ?",
+        (ctx.author.id, item)
     )
 
-    if not remove_item(
-        ctx.author.id,
-        found
-    ):
-        await ctx.send(
-            "❌ Не удалось продать предмет."
-        )
-        return
-
-    add_coins(
-        ctx.author.id,
-        sell_price
-    )
-
-    await ctx.send(
-        f"💸 Ты продал **{found}** "
-        f"за **{sell_price:,} монет**."
-    )
-
-
-@bot.command()
-async def утилизировать(
-    ctx,
-    *,
-    item=None
-):
-    if not item:
-        await ctx.send(
-            "❌ Напиши предмет.\n"
-            "Например: `!утилизировать Ubuntu`"
-        )
-        return
-
-    inventory = get_inventory(
+    c.execute("""
+        UPDATE users
+        SET scrap = scrap + ?,
+            metal = metal + ?,
+            mvk = mvk + ?
+        WHERE user_id = ?
+    """, (
+        scrap * amount,
+        metal * amount,
+        mvk * amount,
         ctx.author.id
-    )
+    ))
 
-    found = None
+    conn.commit()
+    conn.close()
 
-    for owned_item, amount in inventory:
-        if item.lower() == owned_item.lower():
-            found = owned_item
-            break
+    rewards = []
 
-    if not found:
-        for owned_item, amount in inventory:
-            if item.lower() in owned_item.lower():
-                found = owned_item
-                break
+    if scrap:
+        rewards.append(f"🪨 +{scrap * amount} скрапа")
 
-    if not found:
-        await ctx.send(
-            "❌ У тебя нет такого предмета."
-        )
-        return
+    if metal:
+        rewards.append(f"🔩 +{metal * amount} металла")
 
-    rewards = get_scrap_reward(
-        found
-    )
-
-    if not rewards:
-        await ctx.send(
-            "❌ Этот предмет нельзя утилизировать."
-        )
-        return
-
-    if not remove_item(
-        ctx.author.id,
-        found
-    ):
-        await ctx.send(
-            "❌ Не удалось утилизировать предмет."
-        )
-        return
-
-    for material, amount in rewards.items():
-        add_material(
-            ctx.author.id,
-            material,
-            amount
-        )
+    if mvk:
+        rewards.append(f"⚙️ +{mvk * amount} МВК")
 
     await ctx.send(
-        f"♻️ **ПРЕДМЕТ УТИЛИЗИРОВАН**\n\n"
-        f"📦 {found}\n\n"
-        f"{format_materials(rewards)}"
+        f"♻️ Утилизировано **{item}** ×{amount}.\n"
+        + " | ".join(rewards)
     )
 
 
 @bot.command()
 async def ресурсы(ctx):
-    data = get_materials(
-        ctx.author.id
+    ensure_user(ctx.author.id)
+
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+
+    c.execute(
+        "SELECT scrap, metal, mvk FROM users WHERE user_id = ?",
+        (ctx.author.id,)
     )
 
+    scrap, metal, mvk = c.fetchone()
+
+    conn.close()
+
     await ctx.send(
-        f"♻️ **ТВОИ РЕСУРСЫ**\n\n"
-        f"🪨 Скрап × **{data['скрап']}**\n"
-        f"🔩 Метал × **{data['метал']}**\n"
-        f"⚙️ МВК × **{data['мвк']}**\n\n"
-        f"💡 Для крафта шапки нужно 3 одинаковых ресурса."
+        f"♻️ **Твои ресурсы**\n\n"
+        f"🪨 Скрап: **{scrap}**\n"
+        f"🔩 Метал: **{metal}**\n"
+        f"⚙️ МВК: **{mvk}**"
     )
 
 
 @bot.command()
-async def крафт(
-    ctx,
-    *,
-    recipe=None
-):
-    if not recipe:
+async def крафт(ctx, category=None, material=None):
+    if category is None or material is None:
         await ctx.send(
-            "❌ Используй:\n"
-            "`!крафт шапка скрап`\n"
-            "`!крафт шапка метал`\n"
-            "`!крафт шапка мвк`"
+            "Использование: `!крафт шапка скрап/метал/мвк`"
         )
         return
 
-    recipe = recipe.lower().strip()
-
-    if recipe.startswith("шапка "):
-        material = recipe.replace(
-            "шапка ",
-            "",
-            1
-        ).strip()
-    else:
+    if category.lower() != "шапка":
         await ctx.send(
-            "❌ Используй:\n"
-            "`!крафт шапка скрап`\n"
-            "`!крафт шапка метал`\n"
-            "`!крафт шапка мвк`"
+            "❌ Сейчас можно крафтить только шапки."
         )
         return
+
+    material = material.lower()
 
     if material not in materials:
         await ctx.send(
-            "❌ Неизвестный материал.\n"
-            "Доступно: `скрап`, `метал`, `мвк`."
+            "❌ Материал должен быть: `скрап`, `метал` или `мвк`."
         )
         return
 
-    if not remove_material(
-        ctx.author.id,
-        material,
-        3
-    ):
+    ensure_user(ctx.author.id)
+
+    column = {
+        "скрап": "scrap",
+        "метал": "metal",
+        "мвк": "mvk"
+    }[material]
+
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+
+    c.execute(
+        f"SELECT {column} FROM users WHERE user_id = ?",
+        (ctx.author.id,)
+    )
+
+    amount = c.fetchone()[0]
+
+    if amount < 3:
+        conn.close()
+
         await ctx.send(
-            f"❌ Нужно **3** {materials[material]['name']}."
+            f"❌ Нужно **3 {material}**."
         )
         return
 
-    chance = craft_chances[material]
+    c.execute(
+        f"UPDATE users SET {column} = {column} - 3 WHERE user_id = ?",
+        (ctx.author.id,)
+    )
+
+    conn.commit()
+    conn.close()
+
+    chances = {
+        "скрап": 0.70,
+        "метал": 0.55,
+        "мвк": 0.40
+    }
+
+    chance = chances[material]
 
     if random.random() > chance:
         await ctx.send(
-            f"💀 **КРАФТ ПРОВАЛЕН!**\n\n"
-            f"Ты потратил 3 × {materials[material]['name']}.\n"
-            f"Шапка не получилась.\n\n"
-            f"🎲 Шанс успеха: **{int(chance * 100)}%**"
+            f"💥 Крафт провалился.\n"
+            f"Потрачено: **3 {material}**."
         )
         return
 
-    result_hat = roll_hat(
-        material
+    hat = roll_hat(material)
+
+    add_hat(ctx.author.id, hat)
+
+    value = hats[hat]["value"]
+
+    await ctx.send(
+        f"🎩 **КРАФТ УСПЕШЕН!**\n\n"
+        f"Ты получил: **{hat}**\n"
+        f"💰 Цена продажи: **{value}** монет"
     )
 
-    if not result_hat:
+
+@bot.command()
+async def шапка(ctx, *, hat_name=None):
+    if not hat_name:
         await ctx.send(
-            "❌ Для этого материала пока нет шапок."
+            "Использование: `!шапка название` или `!шапка убрать`"
         )
-        add_material(
+        return
+
+    ensure_user(ctx.author.id)
+
+    if hat_name.lower() == "убрать":
+        conn = sqlite3.connect(DB)
+        c = conn.cursor()
+
+        c.execute(
+            "UPDATE users SET hat = NULL WHERE user_id = ?",
+            (ctx.author.id,)
+        )
+
+        conn.commit()
+        conn.close()
+
+        await ctx.send("🎩 Шапка снята.")
+        return
+
+    hat, amount = find_hat_in_inventory(
+        ctx.author.id,
+        hat_name
+    )
+
+    if hat is None:
+        await ctx.send(
+            "❌ У тебя нет такой шапки."
+        )
+        return
+
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+
+    c.execute(
+        "UPDATE users SET hat = ? WHERE user_id = ?",
+        (hat, ctx.author.id)
+    )
+
+    conn.commit()
+    conn.close()
+
+    await ctx.send(
+        f"🎩 Теперь на тебе **{hat}**."
+    )
+
+
+@bot.command()
+async def витрина(ctx, *, item_name=None):
+    if not item_name:
+        await ctx.send(
+            "Использование: `!витрина предмет` или `!витрина убрать`"
+        )
+        return
+
+    ensure_user(ctx.author.id)
+
+    if item_name.lower() == "убрать":
+        conn = sqlite3.connect(DB)
+        c = conn.cursor()
+
+        c.execute(
+            "UPDATE users SET showcase_item = NULL WHERE user_id = ?",
+            (ctx.author.id,)
+        )
+
+        conn.commit()
+        conn.close()
+
+        await ctx.send("🖼️ Витрина очищена.")
+        return
+
+    item, amount = find_item_in_inventory(
+        ctx.author.id,
+        item_name
+    )
+
+    if item is None:
+        hat, hat_amount = find_hat_in_inventory(
             ctx.author.id,
-            material,
-            3
-        )
-        return
-
-    add_hat(
-        ctx.author.id,
-        result_hat
-    )
-
-    await ctx.send(
-        f"🎉 **КРАФТ УДАЛСЯ!**\n\n"
-        f"🧢 Ты получил:\n"
-        f"**{result_hat}**\n\n"
-        f"🎲 Шанс успеха был **{int(chance * 100)}%**."
-    )
-
-
-@bot.command()
-async def шапка(
-    ctx,
-    *,
-    hat=None
-):
-    if not hat:
-        await ctx.send(
-            "❌ Напиши название шапки.\n"
-            "Например: `!шапка Кепка разведчика`\n"
-            "Или `!шапка убрать`."
-        )
-        return
-
-    if hat.lower() == "убрать":
-        clear_hat(
-            ctx.author.id
+            item_name
         )
 
-        await ctx.send(
-            "🧢 Шапка снята."
-        )
-        return
-
-    found = None
-
-    for hat_name in hats:
-        if hat.lower() == hat_name.lower():
-            found = hat_name
-            break
-
-    if not found:
-        for hat_name in hats:
-            clean_name = hat_name.replace(
-                " (шапка)",
-                ""
+        if hat is None:
+            await ctx.send(
+                "❌ У тебя нет такого предмета или шапки."
             )
+            return
 
-            if hat.lower() in clean_name.lower():
-                found = hat_name
-                break
+        item = hat
 
-    if not found:
-        await ctx.send(
-            "❌ Такой шапки не существует."
-        )
-        return
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
 
-    if not has_hat(
-        ctx.author.id,
-        found
-    ):
-        await ctx.send(
-            "❌ У тебя нет этой шапки."
-        )
-        return
-
-    set_hat(
-        ctx.author.id,
-        found
+    c.execute(
+        "UPDATE users SET showcase_item = ? WHERE user_id = ?",
+        (item, ctx.author.id)
     )
 
+    conn.commit()
+    conn.close()
+
     await ctx.send(
-        f"🧢 Теперь на тебе **{found}**!"
+        f"🖼️ На витрину выставлено **{item}**."
     )
 
 
 @bot.command()
-async def витрина(
-    ctx,
-    *,
-    item=None
-):
-    if not item:
-        await ctx.send(
-            "❌ Напиши предмет.\n"
-            "Например: `!витрина Arch Linux`"
-        )
-        return
+async def профиль(ctx):
+    ensure_user(ctx.author.id)
 
-    if item.lower() == "убрать":
-        clear_showcase(
-            ctx.author.id
-        )
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
 
-        await ctx.send(
-            "🖼️ Витрина очищена."
-        )
-        return
+    c.execute("""
+        SELECT coins, wins, losses, title, showcase_item,
+               level, xp, hat
+        FROM users
+        WHERE user_id = ?
+    """, (ctx.author.id,))
 
-    inventory = get_inventory(
-        ctx.author.id
-    )
+    data = c.fetchone()
 
-    found = None
+    conn.close()
 
-    for owned_item, amount in inventory:
-        if item.lower() == owned_item.lower():
-            found = owned_item
-            break
-
-    if not found:
-        for owned_item, amount in inventory:
-            if item.lower() in owned_item.lower():
-                found = owned_item
-                break
-
-    if not found:
-        await ctx.send(
-            "❌ У тебя нет такого предмета."
-        )
-        return
-
-    set_showcase(
-        ctx.author.id,
-        found
-    )
-
-    await ctx.send(
-        f"🖼️ На витрину выставлен "
-        f"**{found}**."
-    )
-
-
-@bot.command()
-async def профиль(
-    ctx,
-    member: discord.Member = None
-):
-    member = member or ctx.author
-
-    row = get_user(
-        member.id
-    )
-
-    if not row:
-        await ctx.send(
-            "❌ Профиль не найден."
-        )
-        return
-
-    (
-        user_id,
-        coins,
-        wins,
-        losses,
-        title,
-        showcase,
-        level,
-        xp,
-        scrap,
-        metal,
-        mvk,
-        hat
-    ) = row
-
-    needed = xp_needed(
-        level
-    )
+    coins, wins, losses, title, showcase, level, xp, hat = data
 
     embed = discord.Embed(
-        title=f"👤 Профиль {member.display_name}",
-        color=discord.Color.blurple()
+        title=f"👤 Профиль {ctx.author.display_name}"
     )
 
     embed.add_field(
         name="💰 Баланс",
-        value=f"**{coins:,}** монет",
-        inline=True
-    )
-
-    embed.add_field(
-        name="🎖️ Уровень",
-        value=f"**{level}**",
-        inline=True
-    )
-
-    embed.add_field(
-        name="✨ Опыт",
-        value=f"**{xp} / {needed} XP**",
+        value=str(coins),
         inline=True
     )
 
     embed.add_field(
         name="🏆 Победы",
-        value=f"**{wins}**",
+        value=str(wins),
         inline=True
     )
 
     embed.add_field(
         name="💀 Поражения",
-        value=f"**{losses}**",
+        value=str(losses),
         inline=True
     )
 
     embed.add_field(
-        name="👑 Титул",
+        name="⭐ Уровень",
+        value=f"{level} ({xp} XP)",
+        inline=True
+    )
+
+    embed.add_field(
+        name="🎩 Шапка",
+        value=hat or "Нет",
+        inline=False
+    )
+
+    embed.add_field(
+        name="🏆 Титул",
         value=title or "Нет",
         inline=False
     )
 
     embed.add_field(
         name="🖼️ Витрина",
-        value=showcase or "Пусто",
+        value=showcase or "Нет",
         inline=False
     )
 
-    embed.add_field(
-        name="🧢 Шапка",
-        value=hat or "Нет",
-        inline=False
-    )
-
-    embed.add_field(
-        name="♻️ Ресурсы",
-        value=(
-            f"🪨 {scrap}  "
-            f"🔩 {metal}  "
-            f"⚙️ {mvk}"
-        ),
-        inline=False
-    )
-
-    embed.set_thumbnail(
-        url=member.display_avatar.url
-    )
-
-    await ctx.send(
-        embed=embed
-    )
+    await ctx.send(embed=embed)
 
 
 @bot.command()
 async def титулы(ctx):
-    titles = get_titles(
-        ctx.author.id
-    )
+    owned = get_title_inventory(ctx.author.id)
 
-    if not titles:
-        await ctx.send(
-            "👑 У тебя пока нет титулов."
+    text = "🏆 **ТИТУЛЫ**\n\n"
+
+    for title, chance in anime_titles.items():
+        status = "✅" if title in owned else "🔒"
+
+        text += (
+            f"{status} {title} — **{chance}%**\n"
         )
-        return
 
-    text = "👑 **ТВОИ ТИТУЛЫ**\n\n"
-
-    for title in titles:
-        text += f"{title}\n"
-
-    await ctx.send(
-        text
-    )
+    await ctx.send(text)
 
 
 @bot.command()
-async def титул(
-    ctx,
-    *,
-    title=None
-):
-    if not title:
+async def титул(ctx, *, title_name=None):
+    if not title_name:
         await ctx.send(
-            "❌ Напиши титул.\n"
-            "Например: `!титул Сигма`"
+            "Использование: `!титул название` или `!титул убрать`"
         )
         return
 
-    if title.lower() == "убрать":
-        set_title(
-            ctx.author.id,
-            None
+    ensure_user(ctx.author.id)
+
+    if title_name.lower() == "убрать":
+        conn = sqlite3.connect(DB)
+        c = conn.cursor()
+
+        c.execute(
+            "UPDATE users SET title = NULL WHERE user_id = ?",
+            (ctx.author.id,)
         )
 
-        await ctx.send(
-            "👑 Титул убран."
-        )
+        conn.commit()
+        conn.close()
+
+        await ctx.send("🏆 Титул снят.")
         return
 
-    titles = get_titles(
-        ctx.author.id
-    )
+    owned = get_title_inventory(ctx.author.id)
 
     found = None
 
-    for owned_title in titles:
-        if title.lower() == owned_title.lower():
-            found = owned_title
+    for title in owned:
+        if title.lower() == title_name.lower():
+            found = title
             break
 
-    if not found:
-        for owned_title in titles:
-            if title.lower() in owned_title.lower():
-                found = owned_title
-                break
-
-    if not found:
+    if found is None:
         await ctx.send(
             "❌ У тебя нет такого титула."
         )
         return
 
-    set_title(
-        ctx.author.id,
-        found
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+
+    c.execute(
+        "UPDATE users SET title = ? WHERE user_id = ?",
+        (found, ctx.author.id)
     )
 
+    conn.commit()
+    conn.close()
+
     await ctx.send(
-        f"👑 Теперь твой титул: **{found}**"
+        f"🏆 Теперь твой титул: **{found}**"
     )
 
 
 @bot.command()
 async def аниме_кейс(ctx):
-    key = "📖 26 том магической битвы"
-
-    inventory = get_inventory(
-        ctx.author.id
-    )
-
-    amount = 0
-
-    for item, item_amount in inventory:
-        if item == key:
-            amount = item_amount
-            break
-
-    if amount <= 0:
-        await ctx.send(
-            "❌ У тебя нет **26 тома магической битвы**."
-        )
-        return
-
-    remove_item(
-        ctx.author.id,
-        key
-    )
-
-    roll = random.uniform(
-        0,
-        sum(
-            weight
-            for title, weight in anime_titles
-        )
-    )
+    roll = random.random() * 100
 
     current = 0
-    selected = anime_titles[-1][0]
+    result = None
 
-    for title, weight in anime_titles:
-        current += weight
+    for title, chance in anime_titles.items():
+        current += chance
 
         if roll <= current:
-            selected = title
+            result = title
             break
 
-    add_title(
-        ctx.author.id,
-        selected
-    )
+    if result is None:
+        result = "🗿 Абсолют"
+
+    add_title(ctx.author.id, result)
 
     await ctx.send(
-        f"🎌 **АНИМЕ-КЕЙС ОТКРЫТ!**\n\n"
-        f"👑 Тебе выпал титул:\n"
-        f"**{selected}**"
+        f"🎴 **АНИМЕ-КЕЙС**\n\n"
+        f"Ты получил титул: **{result}**"
     )
 
 
 @bot.command()
 async def кубик(ctx):
-    result = random.randint(
-        1,
-        6
-    )
+    number = random.randint(1, 6)
 
     await ctx.send(
-        f"🎲 Выпало: **{result}**"
+        f"🎲 Выпало: **{number}**"
     )
 
 
 @bot.command()
 async def монетка(ctx):
     result = random.choice(
-        [
-            "Орёл 🦅",
-            "Решка 🪙"
-        ]
+        ["🪙 Орёл", "🪙 Решка"]
     )
 
     await ctx.send(
-        f"🪙 **{result}**"
+        f"Монетка: **{result}**"
     )
 
 
 @bot.command()
 async def угадай(ctx):
-    number = random.randint(
-        1,
-        10
-    )
+    number = random.randint(1, 10)
 
     await ctx.send(
-        "🎯 Я загадал число от **1 до 10**.\n"
-        "Напиши свой вариант."
+        f"🔮 Я загадал число от **1 до 10**.\n"
+        f"Попробуй угадать командой `!угадай число`."
     )
 
     def check(message):
         return (
             message.author.id == ctx.author.id
             and message.channel.id == ctx.channel.id
-            and message.content.isdigit()
+            and message.content.startswith("!угадай ")
         )
 
     try:
         message = await bot.wait_for(
             "message",
-            timeout=15,
+            timeout=30,
             check=check
         )
 
+        try:
+            guess = int(message.content.split()[1])
+        except:
+            await ctx.send("❌ Нужно написать число.")
+            return
+
+        if guess == number:
+            await ctx.send(
+                f"🎉 Угадал! Это было **{number}**!"
+            )
+        else:
+            await ctx.send(
+                f"❌ Не угадал. Было **{number}**."
+            )
+
     except asyncio.TimeoutError:
         await ctx.send(
-            f"⏱️ Время вышло. "
-            f"Я загадал **{number}**."
-        )
-        return
-
-    guess = int(
-        message.content
-    )
-
-    if guess == number:
-        add_coins(
-            ctx.author.id,
-            50
-        )
-
-        await ctx.send(
-            f"🎯 **УГАДАЛ!**\n"
-            f"Число было **{number}**.\n"
-            f"💰 +50 монет."
-        )
-
-    else:
-        await ctx.send(
-            f"❌ Не угадал.\n"
-            f"Я загадал **{number}**."
+            f"⏰ Время вышло. Я загадал **{number}**."
         )
 
 
 @bot.command()
 async def цитата(ctx):
-    quote = get_random_quote()
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
 
-    if not quote:
-        await ctx.send(
-            "📜 Пока нет ни одной цитаты.\n"
-            "Поставьте 🐊🐊 на какое-нибудь "
-            "сообщение."
-        )
+    c.execute("""
+        SELECT author, content
+        FROM quotes
+        ORDER BY RANDOM()
+        LIMIT 1
+    """)
+
+    quote = c.fetchone()
+
+    conn.close()
+
+    if quote is None:
+        await ctx.send("📖 Цитат пока нет.")
         return
 
     author, content = quote
 
     await ctx.send(
-        f"📜 **Случайная цитата:**\n\n"
+        f"📖 **ЦИТАТА**\n\n"
         f"> {content}\n\n"
-        f"— **{author}**"
+        f"— {author}"
     )
 
 
@@ -3040,234 +1997,298 @@ async def могбатл(
     *,
     case_name=None
 ):
-    if not opponent:
+    if opponent is None or case_name is None:
         await ctx.send(
-            "❌ Укажи противника.\n\n"
             "Использование:\n"
             "`!могбатл @user название кейса`"
         )
         return
 
-    if not case_name:
+    if opponent.bot:
         await ctx.send(
-            "❌ Ты обязан выбрать кейс.\n\n"
-            "Использование:\n"
-            "`!могбатл @user алмаз`"
+            "❌ Нельзя вызвать бота на мог-баттл."
         )
         return
 
     if opponent.id == ctx.author.id:
         await ctx.send(
-            "💀 Нельзя вызвать самого себя."
+            "❌ Нельзя вызвать самого себя."
         )
         return
 
-    if opponent.bot:
+    found_case = None
+
+    for name in cases:
+        if name.lower() == case_name.lower():
+            found_case = name
+            break
+
+    if found_case is None:
         await ctx.send(
-            "🤖 Ботов могать нельзя."
+            "❌ Такого кейса нет. Посмотри `!кейсы`."
         )
         return
 
-    case_name = find_case(
-        case_name
-    )
+    price = cases[found_case]["price"]
 
-    if not case_name:
+    if get_balance(ctx.author.id) < price:
         await ctx.send(
-            "❌ Такого кейса нет.\n"
-            "Посмотри доступные через `!кейсы`."
+            f"❌ У тебя недостаточно денег. "
+            f"Нужно **{price}** монет."
         )
         return
 
-    price = cases[
-        case_name
-    ]["price"]
-
-    required_level = cases[
-        case_name
-    ]["unlock_level"]
-
-    challenger = get_user(
-        ctx.author.id
-    )
-
-    opponent_user = get_user(
-        opponent.id
-    )
-
-    if challenger[6] < required_level:
+    if get_balance(opponent.id) < price:
         await ctx.send(
-            f"🔒 Этот кейс открывается только "
-            f"с **{required_level} уровня**.\n"
-            f"Твой уровень: **{challenger[6]}**."
-        )
-        return
-
-    if opponent_user[6] < required_level:
-        await ctx.send(
-            f"🔒 {opponent.mention} ещё не достиг "
-            f"**{required_level} уровня** для этого кейса."
-        )
-        return
-
-    if challenger[1] < price:
-        await ctx.send(
-            f"💸 У тебя недостаточно денег.\n"
-            f"Нужно **{price:,} монет**."
-        )
-        return
-
-    if opponent_user[1] < price:
-        await ctx.send(
-            f"💸 У {opponent.mention} недостаточно денег "
-            f"для этого мог-батла.\n"
-            f"Ему нужно **{price:,} монет**."
+            f"❌ У {opponent.mention} недостаточно денег "
+            f"для этого баттла."
         )
         return
 
     view = MogBattleView(
         ctx.author,
         opponent,
-        case_name
+        found_case
     )
 
-    message = await ctx.send(
-        f"⚔️ {ctx.author.mention} **вызывает на МОГ-БАТЛ** "
-        f"{opponent.mention}!\n\n"
-        f"📦 Кейс: **{case_name}**\n"
-        f"💰 Ставка: **{price:,} монет** с каждого\n"
-        f"🏆 Банк: **{price * 2:,} монет**\n\n"
-        f"💀 {opponent.mention}, ты принимаешь вызов?\n"
-        f"⏳ У тебя **30 секунд**.",
+    await ctx.send(
+        f"⚔️ **{ctx.author.mention} вызывает "
+        f"{opponent.mention} на МОГ-БАТТЛ!**\n\n"
+        f"📦 Кейс: **{found_case}**\n"
+        f"💰 Ставка каждого: **{price}**\n"
+        f"🏦 Банк: **{price * 2}**\n\n"
+        f"Соперник должен нажать **Принять**.",
         view=view
     )
 
-    view.message = message
+
+async def money_drop_loop():
+    global active_drop
+
+    await bot.wait_until_ready()
+
+    while not bot.is_closed():
+        await asyncio.sleep(
+            random.randint(600, 2400)
+        )
+
+        channel = bot.get_channel(DROP_CHANNEL_ID)
+
+        if channel is None:
+            continue
+
+        roll = random.random()
+
+        if roll < 0.003:
+            amount = random.randint(200, 400)
+            drop_type = "💎 УЛЬТРА-ДРОП"
+
+        elif roll < 0.018:
+            amount = random.randint(80, 180)
+            drop_type = "🔥 МЕГА-ДРОП"
+
+        elif roll < 0.078:
+            amount = random.randint(30, 80)
+            drop_type = "💰 ЖИРНЫЙ ДРОП"
+
+        else:
+            amount = random.randint(5, 30)
+            drop_type = "💸 ДРОП"
+
+        role = discord.utils.get(
+            channel.guild.roles,
+            name=DROP_ROLE_NAME
+        )
+
+        mention = role.mention if role else ""
+
+        active_drop = {
+            "amount": amount,
+            "channel_id": channel.id,
+            "expires": time.time() + 30
+        }
+
+        await channel.send(
+            f"{mention}\n"
+            f"🎁 **{drop_type}**\n"
+            f"💰 На земле лежит **{amount}** монет!\n\n"
+            f"Первый пишет `!забрать` — тот забирает дроп.\n"
+            f"⏳ У тебя 30 секунд!"
+        )
+
+        await asyncio.sleep(30)
+
+        if active_drop is not None:
+            active_drop = None
+
+            await channel.send(
+                "💨 Дроп исчез — никто не успел его забрать."
+            )
 
 
 @bot.command()
 async def забрать(ctx):
     global active_drop
 
-    if ctx.channel.id != DROP_CHANNEL_ID:
+    if active_drop is None:
         await ctx.send(
-            "❌ Забрать дроп можно только "
-            "в специальном канале."
+            "❌ Сейчас нет активного дропа."
         )
         return
 
-    if not active_drop:
+    if active_drop["channel_id"] != ctx.channel.id:
         await ctx.send(
-            "💨 Сейчас нет активного дропа."
+            "❌ Этот дроп находится в другом канале."
         )
         return
 
-    if active_drop["claimed"]:
+    if time.time() > active_drop["expires"]:
+        active_drop = None
+
         await ctx.send(
-            "💨 Дроп уже забрали."
+            "❌ Дроп уже исчез."
         )
         return
 
     amount = active_drop["amount"]
-
-    active_drop["claimed"] = True
     active_drop = None
 
-    add_coins(
-        ctx.author.id,
-        amount
-    )
+    add_coins(ctx.author.id, amount)
 
     await ctx.send(
-        f"💰 **УСПЕЛ!**\n"
-        f"{ctx.author.display_name}, ты забрал "
-        f"**{amount:,} монет**!"
+        f"🎉 {ctx.author.mention} забрал дроп!\n"
+        f"💰 Получено: **{amount}** монет."
     )
 
 
 @bot.command()
 async def дроппинг(ctx):
+    if ctx.guild is None:
+        return
+
     role = discord.utils.get(
         ctx.guild.roles,
         name=DROP_ROLE_NAME
     )
 
-    if not role:
+    if role is None:
         await ctx.send(
-            "❌ Роль `Дроп` не найдена."
-        )
-        return
-
-    if role >= ctx.guild.me.top_role:
-        await ctx.send(
-            "❌ Я не могу управлять ролью `Дроп`.\n"
-            "Подними мою роль выше роли `Дроп`."
+            f"❌ Роль **{DROP_ROLE_NAME}** не найдена."
         )
         return
 
     if role in ctx.author.roles:
-        await ctx.author.remove_roles(
-            role
-        )
-
-        await ctx.send(
-            f"🔕 {ctx.author.mention}, "
-            f"ты отписался от дропов."
-        )
-
+        try:
+            await ctx.author.remove_roles(role)
+            await ctx.send(
+                "🔕 Ты больше не подписан на дропы."
+            )
+        except discord.Forbidden:
+            await ctx.send(
+                "❌ Боту не хватает прав для изменения роли."
+            )
     else:
-        await ctx.author.add_roles(
-            role
-        )
+        try:
+            await ctx.author.add_roles(role)
+            await ctx.send(
+                "🔔 Ты подписался на дропы!"
+            )
+        except discord.Forbidden:
+            await ctx.send(
+                "❌ Боту не хватает прав для изменения роли."
+            )
 
-        await ctx.send(
-            f"🔔 {ctx.author.mention}, "
-            f"ты подписался на дропы!\n"
-            f"Теперь при появлении дропа будет пинг роли."
+
+@bot.event
+async def on_raw_reaction_add(payload):
+    if payload.user_id == bot.user.id:
+        return
+
+    if str(payload.emoji) != "🐊":
+        return
+
+    channel = bot.get_channel(payload.channel_id)
+
+    if channel is None:
+        return
+
+    try:
+        message = await channel.fetch_message(payload.message_id)
+    except:
+        return
+
+    count = 0
+
+    for reaction in message.reactions:
+        if str(reaction.emoji) == "🐊":
+            count = reaction.count
+            break
+
+    if count < 2:
+        return
+
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+
+    c.execute(
+        "SELECT id FROM quotes WHERE content = ?",
+        (message.content,)
+    )
+
+    if c.fetchone() is not None:
+        conn.close()
+        return
+
+    author = message.author.display_name
+
+    c.execute(
+        """
+        INSERT INTO quotes (user_id, author, content)
+        VALUES (?, ?, ?)
+        """,
+        (
+            message.author.id,
+            author,
+            message.content
         )
+    )
+
+    conn.commit()
+    conn.close()
+
+    await channel.send(
+        f"📖 **ЦИТАТА ЗАФИКСИРОВАНА**\n"
+        f"> {message.content}\n"
+        f"— {author}"
+    )
 
 
 @bot.event
 async def on_command_error(ctx, error):
-    if isinstance(
-        error,
-        commands.MissingPermissions
-    ):
+    if isinstance(error, commands.CommandNotFound):
+        return
+
+    if isinstance(error, commands.MissingPermissions):
         await ctx.send(
             "❌ У тебя нет прав для этой команды."
         )
         return
 
-    if isinstance(
-        error,
-        commands.MissingRequiredArgument
-    ):
+    if isinstance(error, commands.MemberNotFound):
         await ctx.send(
-            "❌ Не хватает аргументов.\n"
-            "Используй `!команды` для справки."
+            "❌ Пользователь не найден."
         )
         return
 
-    if isinstance(
-        error,
-        commands.BadArgument
-    ):
+    if isinstance(error, commands.BadArgument):
         await ctx.send(
-            "❌ Не удалось распознать аргумент."
+            "❌ Неверный аргумент команды."
         )
         return
+
+    print(f"Ошибка команды {ctx.command}: {error}")
 
 
 init_db()
-
-print(
-    "TOKEN найден:",
-    bool(TOKEN)
-)
-
-print(
-    "Длина TOKEN:",
-    len(TOKEN) if TOKEN else 0
-)
 
 bot.run(TOKEN)
