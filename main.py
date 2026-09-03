@@ -647,6 +647,7 @@ def normalize_name(text):
 
     if len(parts) == 2:
         first = parts[0]
+
         if any(ord(char) > 10000 for char in first):
             text = parts[1]
 
@@ -808,6 +809,7 @@ class MogBattleView(discord.ui.View):
         self.opponent = opponent
         self.case_name = case_name
         self.accepted = None
+        self.message = None
 
     @discord.ui.button(
         label="Принять",
@@ -854,18 +856,6 @@ class MogBattleView(discord.ui.View):
         challenger_money, challenger_item = roll_case(self.case_name)
         opponent_money, opponent_item = roll_case(self.case_name)
 
-        if challenger_money:
-            add_coins(self.challenger.id, challenger_money)
-
-        if opponent_money:
-            add_coins(self.opponent.id, opponent_money)
-
-        if challenger_item:
-            add_item(self.challenger.id, challenger_item)
-
-        if opponent_item:
-            add_item(self.opponent.id, opponent_item)
-
         challenger_value = case_value(
             challenger_money,
             challenger_item
@@ -894,17 +884,32 @@ class MogBattleView(discord.ui.View):
                 content=(
                     f"⚔️ **МОГ-БАТТЛ**\n\n"
                     f"🎁 Кейс: **{self.case_name}**\n\n"
-                    f"{self.challenger.mention}: "
-                    f"**{challenger_value:.0f}**\n"
-                    f"{self.opponent.mention}: "
-                    f"**{opponent_value:.0f}**\n\n"
-                    f"🤝 Ничья! Ставки возвращены."
+                    f"{self.challenger.mention}\n"
+                    f"└ {challenger_item if challenger_item else '💰 Только деньги'} + {challenger_money} монет\n"
+                    f"└ Стоимость: **{challenger_value:.0f}**\n\n"
+                    f"{self.opponent.mention}\n"
+                    f"└ {opponent_item if opponent_item else '💰 Только деньги'} + {opponent_money} монет\n"
+                    f"└ Стоимость: **{opponent_value:.0f}**\n\n"
+                    f"🤝 **Ничья!**\n"
+                    f"💰 Ставки возвращены.\n"
+                    f"🎁 Дропы обоих игроков аннулированы."
                 ),
                 view=None
             )
 
             self.stop()
             return
+
+        total_drop_money = challenger_money + opponent_money
+
+        if total_drop_money:
+            add_coins(winner.id, total_drop_money)
+
+        if challenger_item:
+            add_item(winner.id, challenger_item)
+
+        if opponent_item:
+            add_item(winner.id, opponent_item)
 
         add_coins(winner.id, pot)
 
@@ -939,15 +944,17 @@ class MogBattleView(discord.ui.View):
             content=(
                 f"⚔️ **МОГ-БАТТЛ**\n\n"
                 f"🎁 Кейс: **{self.case_name}**\n"
-                f"💰 Банк: **{pot}**\n\n"
+                f"💰 Банк ставок: **{pot}**\n\n"
                 f"{self.challenger.mention}\n"
                 f"└ {challenger_drop} + {challenger_money} монет\n"
                 f"└ Стоимость: **{challenger_value:.0f}**\n\n"
                 f"{self.opponent.mention}\n"
                 f"└ {opponent_drop} + {opponent_money} монет\n"
                 f"└ Стоимость: **{opponent_value:.0f}**\n\n"
-                f"🏆 Победитель: **{winner.mention}**\n"
-                f"💰 Получает весь банк: **{pot}**"
+                f"🏆 Победитель: **{winner.mention}**\n\n"
+                f"🎁 **Победитель забирает весь дроп!**\n"
+                f"💰 Деньги из кейсов: **{total_drop_money}**\n"
+                f"🏦 Банк ставок: **{pot}**"
             ),
             view=None
         )
@@ -955,7 +962,31 @@ class MogBattleView(discord.ui.View):
         self.stop()
 
     async def on_timeout(self):
+        if self.accepted is not None:
+            return
+
         self.accepted = False
+
+        for button in self.children:
+            button.disabled = True
+
+        if self.message is not None:
+            try:
+                await self.message.edit(
+                    content=(
+                        f"⚔️ **МОГ-БАТТЛ**\n\n"
+                        f"🎁 Кейс: **{self.case_name}**\n"
+                        f"💰 Ставка каждого: **{cases[self.case_name]['price']}**\n\n"
+                        f"{self.challenger.mention} вызывает "
+                        f"{self.opponent.mention} на МОГ-БАТТЛ!\n\n"
+                        f"⏰ **Время вышло.**\n"
+                        f"❌ Соперник не принял вызов."
+                    ),
+                    view=self
+                )
+            except:
+                pass
+
         self.stop()
 
 
@@ -1989,7 +2020,7 @@ async def могбатл(
         found_case
     )
 
-    await ctx.send(
+    message = await ctx.send(
         f"⚔️ **{ctx.author.mention} вызывает "
         f"{opponent.mention} на МОГ-БАТТЛ!**\n\n"
         f"📦 Кейс: **{found_case}**\n"
@@ -1998,6 +2029,8 @@ async def могбатл(
         f"Соперник должен нажать **Принять**.",
         view=view
     )
+
+    view.message = message
 
 
 async def money_drop_loop():
