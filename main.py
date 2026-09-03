@@ -199,23 +199,107 @@ materials = {
 
 
 hats = {
-    "🧢 Шапка из скрапа": {
+    "🧢 Кепка разведчика (шапка)": {
         "material": "скрап",
-        "chance": 0.30,
-        "value": 20
+        "weight": 30
+    },
+    "🪖 Каска инженера (шапка)": {
+        "material": "скрап",
+        "weight": 25
+    },
+    "🎖️ Фуражка солдата (шапка)": {
+        "material": "скрап",
+        "weight": 20
+    },
+    "🩺 Шапка медика (шапка)": {
+        "material": "скрап",
+        "weight": 15
+    },
+    "🕶️ Очки снайпера (шапка)": {
+        "material": "скрап",
+        "weight": 7
+    },
+    "🧰 Гаечная корона инженера (шапка)": {
+        "material": "скрап",
+        "weight": 3
     },
 
-    "🎩 Металлическая шапка": {
+    "🎩 Цилиндр шпиона (шапка)": {
         "material": "метал",
-        "chance": 0.25,
-        "value": 60
+        "weight": 28
+    },
+    "🥽 Очки подрывника (шапка)": {
+        "material": "метал",
+        "weight": 23
+    },
+    "🧢 Кепка медика (шапка)": {
+        "material": "метал",
+        "weight": 18
+    },
+    "🪖 Военная каска (шапка)": {
+        "material": "метал",
+        "weight": 14
+    },
+    "🤠 Шляпа стрелка (шапка)": {
+        "material": "метал",
+        "weight": 10
+    },
+    "💼 Чемодан на голове (шапка)": {
+        "material": "метал",
+        "weight": 5
+    },
+    "👑 Корона Mann Co. (шапка)": {
+        "material": "метал",
+        "weight": 2
     },
 
-    "👑 МВК-шапка": {
+    "🧢 Кепка разведчика Deluxe (шапка)": {
         "material": "мвк",
-        "chance": 0.20,
-        "value": 150
+        "weight": 22
+    },
+    "🪖 Шлем тяжёлого (шапка)": {
+        "material": "мвк",
+        "weight": 18
+    },
+    "🎩 Цилиндр джентльмена (шапка)": {
+        "material": "мвк",
+        "weight": 15
+    },
+    "🎃 Тыква на голове (шапка)": {
+        "material": "мвк",
+        "weight": 12
+    },
+    "🐴 Маска лошади (шапка)": {
+        "material": "мвк",
+        "weight": 9
+    },
+    "🗿 Маска Моаи (шапка)": {
+        "material": "мвк",
+        "weight": 7
+    },
+    "🧠 Мозг на голове (шапка)": {
+        "material": "мвк",
+        "weight": 5
+    },
+    "🔥 Горящая голова (шапка)": {
+        "material": "мвк",
+        "weight": 3
+    },
+    "💎 Алмазная шапка (шапка)": {
+        "material": "мвк",
+        "weight": 1.5
+    },
+    "👑 Корона директора Mann Co. (шапка)": {
+        "material": "мвк",
+        "weight": 0.5
     }
+}
+
+
+craft_chances = {
+    "скрап": 0.70,
+    "метал": 0.55,
+    "мвк": 0.40
 }
 
 
@@ -289,7 +373,16 @@ def init_db():
         CREATE TABLE IF NOT EXISTS titles (
             user_id INTEGER,
             title TEXT,
-            PRIMARY KEY(user_id,title)
+            PRIMARY KEY(user_id, title)
+        )
+    """)
+
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS hats (
+            user_id INTEGER,
+            hat TEXT,
+            amount INTEGER,
+            PRIMARY KEY(user_id, hat)
         )
     """)
 
@@ -797,11 +890,18 @@ def remove_material(user_id, material, amount):
 
 
 def get_hat_inventory(user_id):
+    ensure_user(user_id)
+
     conn = db()
     cur = conn.cursor()
 
     cur.execute(
-        "SELECT hat, amount FROM hats WHERE user_id = ?",
+        """
+        SELECT hat, amount
+        FROM hats
+        WHERE user_id = ?
+        ORDER BY amount DESC
+        """,
         (user_id,)
     )
 
@@ -816,17 +916,6 @@ def add_hat(user_id, hat):
 
     conn = db()
     cur = conn.cursor()
-
-    cur.execute(
-        """
-        CREATE TABLE IF NOT EXISTS hats (
-            user_id INTEGER,
-            hat TEXT,
-            amount INTEGER,
-            PRIMARY KEY(user_id, hat)
-        )
-        """
-    )
 
     cur.execute(
         "SELECT amount FROM hats WHERE user_id = ? AND hat = ?",
@@ -859,6 +948,8 @@ def add_hat(user_id, hat):
 
 
 def has_hat(user_id, hat):
+    ensure_user(user_id)
+
     conn = db()
     cur = conn.cursor()
 
@@ -944,7 +1035,6 @@ def roll_case_item(case_name):
     )
 
     roll = random.uniform(0, total)
-
     current = 0
 
     for item, weight in loot:
@@ -1032,6 +1122,35 @@ def format_materials(rewards):
     return "\n".join(result)
 
 
+def roll_hat(material):
+    available = []
+
+    for hat, data in hats.items():
+        if data["material"] == material:
+            available.append(
+                (hat, data["weight"])
+            )
+
+    if not available:
+        return None
+
+    total = sum(
+        weight
+        for hat, weight in available
+    )
+
+    roll = random.uniform(0, total)
+    current = 0
+
+    for hat, weight in available:
+        current += weight
+
+        if roll <= current:
+            return hat
+
+    return available[-1][0]
+
+
 async def money_drop_loop():
     global active_drop
 
@@ -1091,7 +1210,18 @@ async def money_drop_loop():
             "claimed": False
         }
 
+        role = discord.utils.get(
+            channel.guild.roles,
+            name=DROP_ROLE_NAME
+        )
+
+        if role:
+            ping = role.mention
+        else:
+            ping = ""
+
         await channel.send(
+            f"{ping}\n"
             f"{drop_type}\n"
             f"Кто первый напишет `!забрать`, тот получает "
             f"**{amount:,} монет**!\n"
@@ -1110,7 +1240,9 @@ async def money_drop_loop():
 
 class InventoryView(discord.ui.View):
     def __init__(self, user_id):
-        super().__init__(timeout=120)
+        super().__init__(
+            timeout=120
+        )
 
         self.user_id = user_id
 
@@ -1175,7 +1307,8 @@ class InventoryView(discord.ui.View):
         await interaction.response.send_message(
             f"💸 **ПРОДАНО ВСЁ!**\n\n"
             f"📦 Предметов: **{sold}**\n"
-            f"💰 Получено: **{total:,} монет**"
+            f"💰 Получено: **{total:,} монет**\n\n"
+            f"👑 Титулы и 🧢 шапки продажей не затронуты."
         )
 
 
@@ -1220,6 +1353,8 @@ class MogBattleView(discord.ui.View):
             )
             return
 
+        self.accepted = False
+
         user1 = get_user(
             self.challenger.id
         )
@@ -1237,8 +1372,6 @@ class MogBattleView(discord.ui.View):
         ]["unlock_level"]
 
         if user1[6] < required_level:
-            self.accepted = False
-
             await interaction.response.edit_message(
                 content=(
                     f"❌ {self.challenger.mention} больше не имеет "
@@ -1251,8 +1384,6 @@ class MogBattleView(discord.ui.View):
             return
 
         if user2[6] < required_level:
-            self.accepted = False
-
             await interaction.response.edit_message(
                 content=(
                     f"❌ {self.opponent.mention} ещё не достиг "
@@ -1265,8 +1396,6 @@ class MogBattleView(discord.ui.View):
             return
 
         if user1[1] < price:
-            self.accepted = False
-
             for child in self.children:
                 child.disabled = True
 
@@ -1282,8 +1411,6 @@ class MogBattleView(discord.ui.View):
             return
 
         if user2[1] < price:
-            self.accepted = False
-
             for child in self.children:
                 child.disabled = True
 
@@ -1372,6 +1499,16 @@ class MogBattleView(discord.ui.View):
                 item2
             )
 
+        add_coins(
+            self.challenger.id,
+            money1
+        )
+
+        add_coins(
+            self.opponent.id,
+            money2
+        )
+
         xp_gain = max(
             2,
             min(
@@ -1380,12 +1517,12 @@ class MogBattleView(discord.ui.View):
             )
         )
 
-        add_xp(
+        level1, xp1, leveled1 = add_xp(
             self.challenger.id,
             xp_gain
         )
 
-        add_xp(
+        level2, xp2, leveled2 = add_xp(
             self.opponent.id,
             xp_gain
         )
@@ -1511,6 +1648,8 @@ class MogBattleView(discord.ui.View):
     async def on_timeout(self):
         if self.accepted is not None:
             return
+
+        self.accepted = False
 
         for child in self.children:
             child.disabled = True
@@ -1697,7 +1836,8 @@ async def команды(ctx):
         value=(
             "`!забрать`\n"
             "`!дроппинг`\n"
-            "Денежные дропы появляются раз в 10–40 минут."
+            "Денежные дропы появляются раз в 10–40 минут.\n"
+            "Подписавшиеся получают пинг роли **Дроп**."
         ),
         inline=False
     )
@@ -1754,6 +1894,12 @@ async def дать(
     if member.id == ctx.author.id:
         await ctx.send(
             "💀 Самому себе нельзя."
+        )
+        return
+
+    if member.bot:
+        await ctx.send(
+            "🤖 Ботам деньги передавать нельзя."
         )
         return
 
@@ -2178,6 +2324,18 @@ async def продать(
         )
         return
 
+    if "титул" in item.lower():
+        await ctx.send(
+            "❌ Титулы нельзя продавать."
+        )
+        return
+
+    if "шапка" in item.lower():
+        await ctx.send(
+            "❌ Шапки нельзя продавать."
+        )
+        return
+
     inventory = get_inventory(
         ctx.author.id
     )
@@ -2198,6 +2356,12 @@ async def продать(
     if not found:
         await ctx.send(
             "❌ У тебя нет такого предмета."
+        )
+        return
+
+    if found not in items:
+        await ctx.send(
+            "❌ Этот предмет нельзя продавать."
         )
         return
 
@@ -2360,14 +2524,7 @@ async def крафт(
         )
         return
 
-    chance = None
-    result_hat = None
-
-    for hat, data in hats.items():
-        if data["material"] == material:
-            chance = data["chance"]
-            result_hat = hat
-            break
+    chance = craft_chances[material]
 
     if random.random() > chance:
         await ctx.send(
@@ -2378,6 +2535,21 @@ async def крафт(
         )
         return
 
+    result_hat = roll_hat(
+        material
+    )
+
+    if not result_hat:
+        await ctx.send(
+            "❌ Для этого материала пока нет шапок."
+        )
+        add_material(
+            ctx.author.id,
+            material,
+            3
+        )
+        return
+
     add_hat(
         ctx.author.id,
         result_hat
@@ -2385,9 +2557,9 @@ async def крафт(
 
     await ctx.send(
         f"🎉 **КРАФТ УДАЛСЯ!**\n\n"
-        f"🧢 Ты получил **{result_hat}**!\n"
-        f"🎲 Шанс успеха был **{int(chance * 100)}%**.\n\n"
-        f"Надеть: `!шапка {result_hat}`"
+        f"🧢 Ты получил:\n"
+        f"**{result_hat}**\n\n"
+        f"🎲 Шанс успеха был **{int(chance * 100)}%**."
     )
 
 
@@ -2400,7 +2572,7 @@ async def шапка(
     if not hat:
         await ctx.send(
             "❌ Напиши название шапки.\n"
-            "Например: `!шапка Шапка из скрапа`\n"
+            "Например: `!шапка Кепка разведчика`\n"
             "Или `!шапка убрать`."
         )
         return
@@ -2424,7 +2596,12 @@ async def шапка(
 
     if not found:
         for hat_name in hats:
-            if hat.lower() in hat_name.lower():
+            clean_name = hat_name.replace(
+                " (шапка)",
+                ""
+            )
+
+            if hat.lower() in clean_name.lower():
                 found = hat_name
                 break
 
@@ -3046,9 +3223,39 @@ async def дроппинг(ctx):
         await ctx.send(
             f"🔔 {ctx.author.mention}, "
             f"ты подписался на дропы!\n"
-            f"Теперь роль сохранена, но сам дроп "
-            f"не будет никого пинговать."
+            f"Теперь при появлении дропа будет пинг роли."
         )
+
+
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(
+        error,
+        commands.MissingPermissions
+    ):
+        await ctx.send(
+            "❌ У тебя нет прав для этой команды."
+        )
+        return
+
+    if isinstance(
+        error,
+        commands.MissingRequiredArgument
+    ):
+        await ctx.send(
+            "❌ Не хватает аргументов.\n"
+            "Используй `!команды` для справки."
+        )
+        return
+
+    if isinstance(
+        error,
+        commands.BadArgument
+    ):
+        await ctx.send(
+            "❌ Не удалось распознать аргумент."
+        )
+        return
 
 
 init_db()
