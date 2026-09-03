@@ -31,45 +31,47 @@ drop_task = None
 
 case_open_lock = asyncio.Lock()
 
+
 items = {
-    "🧦 Чулок": {"price": 50, "rarity": "⚪ Обычный"},
-    "💾 Ubuntu": {"price": 100, "rarity": "⚪ Обычный"},
-    "💾 Debian": {"price": 150, "rarity": "⚪ Обычный"},
-    "💾 Fedora": {"price": 200, "rarity": "🟢 Необычный"},
-    "💾 Linux Mint": {"price": 250, "rarity": "🟢 Необычный"},
-    "💾 Manjaro": {"price": 350, "rarity": "🔵 Редкий"},
-    "💾 Arch Linux": {"price": 500, "rarity": "🔵 Редкий"},
-    "💾 Gentoo": {"price": 1000, "rarity": "🟣 Эпический"},
-    "💜 Аметист": {"price": 300, "rarity": "🔵 Редкий"},
-    "⚡ Lit Energy": {"price": 150, "rarity": "⚪ Обычный"},
-    "⚡ Monster": {"price": 250, "rarity": "🟢 Необычный"},
-    "⚡ Red Bull": {"price": 300, "rarity": "🔵 Редкий"},
-    "⚡ Burn": {"price": 400, "rarity": "🔵 Редкий"},
-    "🎮 Godot": {"price": 250, "rarity": "🟢 Необычный"},
-    "🎮 Unity": {"price": 500, "rarity": "🔵 Редкий"},
-    "🎮 Unreal Engine": {"price": 1000, "rarity": "🟣 Эпический"},
-    "🎮 Source Engine": {"price": 1500, "rarity": "🟣 Эпический"},
-    "🎮 CryEngine": {"price": 2000, "rarity": "🟠 Легендарный"},
-    "🦴 Dragonclaw Hook": {"price": 750, "rarity": "🟣 Эпический"},
-    "🚜 МТЗ-82": {"price": 500, "rarity": "🟢 Необычный"},
-    "🚜 Беларус-1221": {"price": 1000, "rarity": "🔵 Редкий"},
-    "🚜 John Deere": {"price": 2000, "rarity": "🟣 Эпический"},
-    "🚜 Fendt": {"price": 3500, "rarity": "🟠 Легендарный"},
-    "🚜 К-700": {"price": 5000, "rarity": "🟠 Легендарный"},
-    "🚜 К-744": {"price": 7500, "rarity": "🔴 Артефакт"},
-    "🧱 Кирпич из Минска": {"price": 120, "rarity": "⚪ Обычный"},
-    "🐸 Жаба": {"price": 600, "rarity": "🔵 Редкий"},
-    "🧠 нейрон": {"price": 900, "rarity": "🟣 Эпический"},
-    "🔥 Лицензия на огонь": {"price": 1800, "rarity": "🟣 Эпический"},
-    "💎 Алмазная анальная пробка": {"price": 4500, "rarity": "🟠 Легендарный"},
-    "👑 Атом Лёхи Пружины": {"price": 10000, "rarity": "🔴 Артефакт"},
-    "📖 26 том магической битвы": {"price": 400, "rarity": "🔵 Редкий"}
+    "🧦 Чулок": {"price": 25, "rarity": "⚪ Обычный"},
+    "💾 Ubuntu": {"price": 50, "rarity": "⚪ Обычный"},
+    "💾 Debian": {"price": 75, "rarity": "⚪ Обычный"},
+    "💾 Fedora": {"price": 100, "rarity": "🟢 Необычный"},
+    "💾 Linux Mint": {"price": 125, "rarity": "🟢 Необычный"},
+    "💾 Manjaro": {"price": 175, "rarity": "🔵 Редкий"},
+    "💾 Arch Linux": {"price": 250, "rarity": "🔵 Редкий"},
+    "💾 Gentoo": {"price": 500, "rarity": "🟣 Эпический"},
+    "💜 Аметист": {"price": 150, "rarity": "🔵 Редкий"},
+    "⚡ Lit Energy": {"price": 75, "rarity": "⚪ Обычный"},
+    "⚡ Monster": {"price": 125, "rarity": "🟢 Необычный"},
+    "⚡ Red Bull": {"price": 150, "rarity": "🔵 Редкий"},
+    "⚡ Burn": {"price": 200, "rarity": "🔵 Редкий"},
+    "🎮 Godot": {"price": 125, "rarity": "🟢 Необычный"},
+    "🎮 Unity": {"price": 250, "rarity": "🔵 Редкий"},
+    "🎮 Unreal Engine": {"price": 500, "rarity": "🟣 Эпический"},
+    "🎮 Source Engine": {"price": 750, "rarity": "🟣 Эпический"},
+    "🎮 CryEngine": {"price": 1000, "rarity": "🟠 Легендарный"},
+    "🦴 Dragonclaw Hook": {"price": 375, "rarity": "🟣 Эпический"},
+    "🚜 МТЗ-82": {"price": 250, "rarity": "🟢 Необычный"},
+    "🚜 Беларус-1221": {"price": 500, "rarity": "🔵 Редкий"},
+    "🚜 John Deere": {"price": 1000, "rarity": "🟣 Эпический"},
+    "🚜 Fendt": {"price": 1750, "rarity": "🟠 Легендарный"},
+    "🚜 К-700": {"price": 2500, "rarity": "🟠 Легендарный"},
+    "🚜 К-744": {"price": 3750, "rarity": "🔴 Артефакт"},
+    "🧱 Кирпич из Минска": {"price": 60, "rarity": "⚪ Обычный"},
+    "🐸 Жаба": {"price": 300, "rarity": "🔵 Редкий"},
+    "🧠 нейрон": {"price": 450, "rarity": "🟣 Эпический"},
+    "🔥 Лицензия на огонь": {"price": 900, "rarity": "🟣 Эпический"},
+    "💎 Алмазная анальная пробка": {"price": 2250, "rarity": "🟠 Легендарный"},
+    "👑 Атом Лёхи Пружины": {"price": 5000, "rarity": "🔴 Артефакт"},
+    "📖 26 том магической битвы": {"price": 200, "rarity": "🔵 Редкий"}
 }
+
 
 cases = {
     "🗑️ Мусор дроп": {
         "price": 5,
-        "money": (0, 4),
+        "money": (0, 3),
         "weight": 45,
         "item_chance": 0.18,
         "unlock_level": 1,
@@ -83,7 +85,7 @@ cases = {
 
     "🥔 Кейс лукашенко": {
         "price": 20,
-        "money": (0, 15),
+        "money": (0, 10),
         "weight": 25,
         "item_chance": 0.22,
         "unlock_level": 2,
@@ -99,7 +101,7 @@ cases = {
 
     "🐸 Кейс жаби жаби": {
         "price": 50,
-        "money": (2, 35),
+        "money": (1, 20),
         "weight": 16,
         "item_chance": 0.25,
         "unlock_level": 3,
@@ -114,7 +116,7 @@ cases = {
 
     "💀 Кейс головного мозга": {
         "price": 100,
-        "money": (5, 65),
+        "money": (2, 35),
         "weight": 8,
         "item_chance": 0.28,
         "unlock_level": 4,
@@ -130,7 +132,7 @@ cases = {
 
     "🔥 Хз огонь": {
         "price": 250,
-        "money": (10, 150),
+        "money": (5, 80),
         "weight": 4,
         "item_chance": 0.31,
         "unlock_level": 5,
@@ -147,7 +149,7 @@ cases = {
 
     "💎 Кейс алмазик": {
         "price": 500,
-        "money": (25, 300),
+        "money": (10, 150),
         "weight": 1.5,
         "item_chance": 0.34,
         "unlock_level": 7,
@@ -164,7 +166,7 @@ cases = {
 
     "👑 Кейс Лёхи Пружины": {
         "price": 1000,
-        "money": (50, 600),
+        "money": (20, 300),
         "weight": 0.5,
         "item_chance": 0.38,
         "unlock_level": 10,
@@ -178,6 +180,44 @@ cases = {
         ]
     }
 }
+
+
+materials = {
+    "скрап": {
+        "name": "🪨 Скрап",
+        "value": 5
+    },
+    "метал": {
+        "name": "🔩 Метал",
+        "value": 15
+    },
+    "мвк": {
+        "name": "⚙️ МВК",
+        "value": 40
+    }
+}
+
+
+hats = {
+    "🧢 Шапка из скрапа": {
+        "material": "скрап",
+        "chance": 0.30,
+        "value": 20
+    },
+
+    "🎩 Металлическая шапка": {
+        "material": "метал",
+        "chance": 0.25,
+        "value": 60
+    },
+
+    "👑 МВК-шапка": {
+        "material": "мвк",
+        "chance": 0.20,
+        "value": 150
+    }
+}
+
 
 anime_titles = [
     ("🗿 Абсолют", 30),
@@ -210,22 +250,31 @@ def init_db():
             title TEXT,
             showcase_item TEXT,
             level INTEGER DEFAULT 1,
-            xp INTEGER DEFAULT 0
+            xp INTEGER DEFAULT 0,
+            scrap INTEGER DEFAULT 0,
+            metal INTEGER DEFAULT 0,
+            mvk INTEGER DEFAULT 0,
+            hat TEXT
         )
     """)
 
     cur.execute("PRAGMA table_info(users)")
     columns = [row[1] for row in cur.fetchall()]
 
-    if "level" not in columns:
-        cur.execute(
-            "ALTER TABLE users ADD COLUMN level INTEGER DEFAULT 1"
-        )
+    migrations = {
+        "level": "INTEGER DEFAULT 1",
+        "xp": "INTEGER DEFAULT 0",
+        "scrap": "INTEGER DEFAULT 0",
+        "metal": "INTEGER DEFAULT 0",
+        "mvk": "INTEGER DEFAULT 0",
+        "hat": "TEXT"
+    }
 
-    if "xp" not in columns:
-        cur.execute(
-            "ALTER TABLE users ADD COLUMN xp INTEGER DEFAULT 0"
-        )
+    for column, definition in migrations.items():
+        if column not in columns:
+            cur.execute(
+                f"ALTER TABLE users ADD COLUMN {column} {definition}"
+            )
 
     cur.execute("""
         CREATE TABLE IF NOT EXISTS inventory (
@@ -275,8 +324,12 @@ def ensure_user(user_id):
 
     if not cur.fetchone():
         cur.execute(
-            "INSERT INTO users (user_id, coins, level, xp) VALUES (?, ?, ?, ?)",
-            (user_id, 50, 1, 0)
+            """
+            INSERT INTO users
+            (user_id, coins, level, xp, scrap, metal, mvk)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """,
+            (user_id, 50, 1, 0, 0, 0, 0)
         )
 
     conn.commit()
@@ -299,7 +352,11 @@ def get_user(user_id):
             title,
             showcase_item,
             level,
-            xp
+            xp,
+            scrap,
+            metal,
+            mvk,
+            hat
         FROM users
         WHERE user_id = ?
         """,
@@ -478,12 +535,20 @@ def add_item(user_id, item):
 
     if row:
         cur.execute(
-            "UPDATE inventory SET amount = amount + 1 WHERE user_id = ? AND item = ?",
+            """
+            UPDATE inventory
+            SET amount = amount + 1
+            WHERE user_id = ? AND item = ?
+            """,
             (user_id, item)
         )
     else:
         cur.execute(
-            "INSERT INTO inventory (user_id, item, amount) VALUES (?, ?, 1)",
+            """
+            INSERT INTO inventory
+            (user_id, item, amount)
+            VALUES (?, ?, 1)
+            """,
             (user_id, item)
         )
 
@@ -491,32 +556,45 @@ def add_item(user_id, item):
     conn.close()
 
 
-def remove_item(user_id, item):
+def remove_item(user_id, item, amount=1):
     ensure_user(user_id)
 
     conn = db()
     cur = conn.cursor()
 
     cur.execute(
-        "SELECT amount FROM inventory WHERE user_id = ? AND item = ?",
+        """
+        SELECT amount
+        FROM inventory
+        WHERE user_id = ? AND item = ?
+        """,
         (user_id, item)
     )
 
     row = cur.fetchone()
 
-    if not row or row[0] <= 0:
+    if not row or row[0] < amount:
         conn.close()
         return False
 
-    if row[0] == 1:
+    new_amount = row[0] - amount
+
+    if new_amount <= 0:
         cur.execute(
-            "DELETE FROM inventory WHERE user_id = ? AND item = ?",
+            """
+            DELETE FROM inventory
+            WHERE user_id = ? AND item = ?
+            """,
             (user_id, item)
         )
     else:
         cur.execute(
-            "UPDATE inventory SET amount = amount - 1 WHERE user_id = ? AND item = ?",
-            (user_id, item)
+            """
+            UPDATE inventory
+            SET amount = ?
+            WHERE user_id = ? AND item = ?
+            """,
+            (new_amount, user_id, item)
         )
 
     conn.commit()
@@ -532,7 +610,12 @@ def get_inventory(user_id):
     cur = conn.cursor()
 
     cur.execute(
-        "SELECT item, amount FROM inventory WHERE user_id = ? ORDER BY amount DESC",
+        """
+        SELECT item, amount
+        FROM inventory
+        WHERE user_id = ?
+        ORDER BY amount DESC
+        """,
         (user_id,)
     )
 
@@ -549,29 +632,16 @@ def add_title(user_id, title):
     cur = conn.cursor()
 
     cur.execute(
-        "INSERT OR IGNORE INTO titles (user_id, title) VALUES (?, ?)",
+        """
+        INSERT OR IGNORE INTO titles
+        (user_id, title)
+        VALUES (?, ?)
+        """,
         (user_id, title)
     )
 
     conn.commit()
     conn.close()
-
-
-def has_title(user_id, title):
-    ensure_user(user_id)
-
-    conn = db()
-    cur = conn.cursor()
-
-    cur.execute(
-        "SELECT 1 FROM titles WHERE user_id = ? AND title = ?",
-        (user_id, title)
-    )
-
-    result = cur.fetchone()
-    conn.close()
-
-    return result is not None
 
 
 def get_titles(user_id):
@@ -613,7 +683,11 @@ def set_showcase(user_id, item):
     cur = conn.cursor()
 
     cur.execute(
-        "UPDATE users SET showcase_item = ? WHERE user_id = ?",
+        """
+        UPDATE users
+        SET showcase_item = ?
+        WHERE user_id = ?
+        """,
         (item, user_id)
     )
 
@@ -628,12 +702,179 @@ def clear_showcase(user_id):
     cur = conn.cursor()
 
     cur.execute(
-        "UPDATE users SET showcase_item = NULL WHERE user_id = ?",
+        """
+        UPDATE users
+        SET showcase_item = NULL
+        WHERE user_id = ?
+        """,
         (user_id,)
     )
 
     conn.commit()
     conn.close()
+
+
+def set_hat(user_id, hat):
+    ensure_user(user_id)
+
+    conn = db()
+    cur = conn.cursor()
+
+    cur.execute(
+        "UPDATE users SET hat = ? WHERE user_id = ?",
+        (hat, user_id)
+    )
+
+    conn.commit()
+    conn.close()
+
+
+def clear_hat(user_id):
+    set_hat(user_id, None)
+
+
+def get_materials(user_id):
+    row = get_user(user_id)
+
+    return {
+        "скрап": row[8],
+        "метал": row[9],
+        "мвк": row[10]
+    }
+
+
+def add_material(user_id, material, amount):
+    ensure_user(user_id)
+
+    column = {
+        "скрап": "scrap",
+        "метал": "metal",
+        "мвк": "mvk"
+    }.get(material)
+
+    if not column:
+        return
+
+    conn = db()
+    cur = conn.cursor()
+
+    cur.execute(
+        f"UPDATE users SET {column} = {column} + ? WHERE user_id = ?",
+        (amount, user_id)
+    )
+
+    conn.commit()
+    conn.close()
+
+
+def remove_material(user_id, material, amount):
+    materials_data = get_materials(user_id)
+
+    if materials_data.get(material, 0) < amount:
+        return False
+
+    column = {
+        "скрап": "scrap",
+        "метал": "metal",
+        "мвк": "mvk"
+    }.get(material)
+
+    if not column:
+        return False
+
+    conn = db()
+    cur = conn.cursor()
+
+    cur.execute(
+        f"UPDATE users SET {column} = {column} - ? WHERE user_id = ?",
+        (amount, user_id)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return True
+
+
+def get_hat_inventory(user_id):
+    conn = db()
+    cur = conn.cursor()
+
+    cur.execute(
+        "SELECT hat, amount FROM hats WHERE user_id = ?",
+        (user_id,)
+    )
+
+    rows = cur.fetchall()
+    conn.close()
+
+    return rows
+
+
+def add_hat(user_id, hat):
+    ensure_user(user_id)
+
+    conn = db()
+    cur = conn.cursor()
+
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS hats (
+            user_id INTEGER,
+            hat TEXT,
+            amount INTEGER,
+            PRIMARY KEY(user_id, hat)
+        )
+        """
+    )
+
+    cur.execute(
+        "SELECT amount FROM hats WHERE user_id = ? AND hat = ?",
+        (user_id, hat)
+    )
+
+    row = cur.fetchone()
+
+    if row:
+        cur.execute(
+            """
+            UPDATE hats
+            SET amount = amount + 1
+            WHERE user_id = ? AND hat = ?
+            """,
+            (user_id, hat)
+        )
+    else:
+        cur.execute(
+            """
+            INSERT INTO hats
+            (user_id, hat, amount)
+            VALUES (?, ?, 1)
+            """,
+            (user_id, hat)
+        )
+
+    conn.commit()
+    conn.close()
+
+
+def has_hat(user_id, hat):
+    conn = db()
+    cur = conn.cursor()
+
+    cur.execute(
+        """
+        SELECT amount
+        FROM hats
+        WHERE user_id = ? AND hat = ?
+        """,
+        (user_id, hat)
+    )
+
+    row = cur.fetchone()
+    conn.close()
+
+    return bool(row and row[0] > 0)
 
 
 def add_quote(user_id, author, content):
@@ -642,7 +883,11 @@ def add_quote(user_id, author, content):
 
     try:
         cur.execute(
-            "INSERT INTO quotes (user_id, author, content) VALUES (?, ?, ?)",
+            """
+            INSERT INTO quotes
+            (user_id, author, content)
+            VALUES (?, ?, ?)
+            """,
             (user_id, author, content)
         )
 
@@ -662,7 +907,12 @@ def get_random_quote():
     cur = conn.cursor()
 
     cur.execute(
-        "SELECT author, content FROM quotes ORDER BY RANDOM() LIMIT 1"
+        """
+        SELECT author, content
+        FROM quotes
+        ORDER BY RANDOM()
+        LIMIT 1
+        """
     )
 
     row = cur.fetchone()
@@ -679,9 +929,7 @@ def find_case(name):
             return case_name
 
     for case_name in cases:
-        clean = case_name.lower()
-
-        if name in clean:
+        if name in case_name.lower():
             return case_name
 
     return None
@@ -735,6 +983,55 @@ def case_value(money, item):
     return value
 
 
+def get_scrap_reward(item):
+    rarity = items[item]["rarity"]
+
+    if "Обычный" in rarity:
+        return {
+            "скрап": 2
+        }
+
+    if "Необычный" in rarity:
+        return {
+            "скрап": 2,
+            "метал": 1
+        }
+
+    if "Редкий" in rarity:
+        return {
+            "метал": 3
+        }
+
+    if "Эпический" in rarity:
+        return {
+            "метал": 1,
+            "мвк": 1
+        }
+
+    if "Легендарный" in rarity:
+        return {
+            "мвк": 2
+        }
+
+    if "Артефакт" in rarity:
+        return {
+            "мвк": 4
+        }
+
+    return {}
+
+
+def format_materials(rewards):
+    result = []
+
+    for material, amount in rewards.items():
+        result.append(
+            f"{materials[material]['name']} × **{amount}**"
+        )
+
+    return "\n".join(result)
+
+
 async def money_drop_loop():
     global active_drop
 
@@ -759,42 +1056,35 @@ async def money_drop_loop():
 
         if roll < 0.003:
             amount = random.randint(
-                500,
-                1000
+                200,
+                400
             )
 
             drop_type = "👑 **УЛЬТРА-ДРОП!**"
 
         elif roll < 0.015:
             amount = random.randint(
-                200,
-                500
+                80,
+                180
             )
 
             drop_type = "💎 **МЕГА-ДРОП!**"
 
         elif roll < 0.06:
             amount = random.randint(
-                50,
-                150
+                30,
+                80
             )
 
             drop_type = "🔥 **ЖИРНЫЙ ДРОП!**"
 
         else:
             amount = random.randint(
-                10,
-                50
+                5,
+                30
             )
 
             drop_type = "💸 **ДЕНЕЖНЫЙ ДРОП!**"
-
-        role = discord.utils.get(
-            channel.guild.roles,
-            name=DROP_ROLE_NAME
-        )
-
-        mention = role.mention if role else ""
 
         active_drop = {
             "amount": amount,
@@ -802,14 +1092,10 @@ async def money_drop_loop():
         }
 
         await channel.send(
-            f"{mention}\n\n"
             f"{drop_type}\n"
             f"Кто первый напишет `!забрать`, тот получает "
             f"**{amount:,} монет**!\n"
-            f"⏳ У вас **30 секунд**!",
-            allowed_mentions=discord.AllowedMentions(
-                roles=True
-            )
+            f"⏳ У вас **30 секунд**!"
         )
 
         await asyncio.sleep(30)
@@ -820,6 +1106,77 @@ async def money_drop_loop():
             await channel.send(
                 "💨 **Дроп протух.** Никто не успел его забрать."
             )
+
+
+class InventoryView(discord.ui.View):
+    def __init__(self, user_id):
+        super().__init__(timeout=120)
+
+        self.user_id = user_id
+
+    @discord.ui.button(
+        label="Продать всё",
+        style=discord.ButtonStyle.green,
+        emoji="💸"
+    )
+    async def sell_all(
+        self,
+        interaction: discord.Interaction,
+        button: discord.ui.Button
+    ):
+        if interaction.user.id != self.user_id:
+            await interaction.response.send_message(
+                "❌ Это не твой инвентарь.",
+                ephemeral=True
+            )
+            return
+
+        inventory = get_inventory(
+            self.user_id
+        )
+
+        total = 0
+        sold = 0
+
+        for item, amount in inventory:
+            if item not in items:
+                continue
+
+            sell_price = int(
+                items[item]["price"] * 0.7
+            )
+
+            total += sell_price * amount
+            sold += amount
+
+        if sold == 0:
+            await interaction.response.send_message(
+                "❌ Продавать нечего.",
+                ephemeral=True
+            )
+            return
+
+        conn = db()
+        cur = conn.cursor()
+
+        cur.execute(
+            "DELETE FROM inventory WHERE user_id = ?",
+            (self.user_id,)
+        )
+
+        conn.commit()
+        conn.close()
+
+        add_coins(
+            self.user_id,
+            total
+        )
+
+        await interaction.response.send_message(
+            f"💸 **ПРОДАНО ВСЁ!**\n\n"
+            f"📦 Предметов: **{sold}**\n"
+            f"💰 Получено: **{total:,} монет**"
+        )
 
 
 class MogBattleView(discord.ui.View):
@@ -987,9 +1344,7 @@ class MogBattleView(discord.ui.View):
             item2
         )
 
-        result1 = (
-            f"💰 {money1:,} монет"
-        )
+        result1 = f"💰 {money1:,} монет"
 
         if item1:
             result1 += (
@@ -997,9 +1352,7 @@ class MogBattleView(discord.ui.View):
                 f"\n{items[item1]['rarity']}"
             )
 
-        result2 = (
-            f"💰 {money2:,} монет"
-        )
+        result2 = f"💰 {money2:,} монет"
 
         if item2:
             result2 += (
@@ -1019,20 +1372,22 @@ class MogBattleView(discord.ui.View):
                 item2
             )
 
-        add_xp(
-            self.challenger.id,
-            max(
-                5,
-                price // 10
+        xp_gain = max(
+            2,
+            min(
+                10,
+                price // 100
             )
         )
 
         add_xp(
+            self.challenger.id,
+            xp_gain
+        )
+
+        add_xp(
             self.opponent.id,
-            max(
-                5,
-                price // 10
-            )
+            xp_gain
         )
 
         bank = price * 2
@@ -1267,8 +1622,7 @@ async def команды(ctx):
         name="📦 Кейсы",
         value=(
             "`!кейсы`\n"
-            "`!кейс название`\n"
-            "`!аниме_кейс`"
+            "`!кейс название`"
         ),
         inline=False
     )
@@ -1279,7 +1633,29 @@ async def команды(ctx):
             "`!инвентарь`\n"
             "`!продать предмет`\n"
             "`!витрина предмет`\n"
-            "`!витрина убрать`"
+            "`!витрина убрать`\n"
+            "Кнопка **💸 Продать всё**"
+        ),
+        inline=False
+    )
+
+    embed.add_field(
+        name="♻️ Ресурсы",
+        value=(
+            "`!ресурсы`\n"
+            "`!утилизировать предмет`"
+        ),
+        inline=False
+    )
+
+    embed.add_field(
+        name="🧢 Шапки",
+        value=(
+            "`!крафт шапка скрап`\n"
+            "`!крафт шапка метал`\n"
+            "`!крафт шапка мвк`\n"
+            "`!шапка название`\n"
+            "`!шапка убрать`"
         ),
         inline=False
     )
@@ -1320,6 +1696,7 @@ async def команды(ctx):
         name="💸 Дропы",
         value=(
             "`!забрать`\n"
+            "`!дроппинг`\n"
             "Денежные дропы появляются раз в 10–40 минут."
         ),
         inline=False
@@ -1471,20 +1848,10 @@ async def работа(ctx):
         now + cooldown
     )
 
-    roll = random.random()
-
-    if roll < 0.03:
-        money = 100
-    elif roll < 0.12:
-        money = random.randint(
-            81,
-            99
-        )
-    else:
-        money = random.randint(
-            20,
-            80
-        )
+    money = random.randint(
+        5,
+        25
+    )
 
     add_coins(
         ctx.author.id,
@@ -1492,8 +1859,8 @@ async def работа(ctx):
     )
 
     xp_gain = random.randint(
-        20,
-        35
+        5,
+        9
     )
 
     level, xp, leveled_up = add_xp(
@@ -1535,7 +1902,12 @@ async def топ(ctx):
     cur = conn.cursor()
 
     cur.execute(
-        "SELECT user_id, coins FROM users ORDER BY coins DESC LIMIT 10"
+        """
+        SELECT user_id, coins
+        FROM users
+        ORDER BY coins DESC
+        LIMIT 10
+        """
     )
 
     rows = cur.fetchall()
@@ -1668,10 +2040,10 @@ async def кейс(
         )
 
         xp_gain = max(
-            5,
+            2,
             min(
-                35,
-                data["price"] // 10
+                10,
+                data["price"] // 100
             )
         )
 
@@ -1704,6 +2076,7 @@ async def кейс(
                 f"{rarity} • 💰 {price:,} монет\n"
                 f"💸 При продаже: {sell_price:,}"
             )
+
         else:
             message += (
                 "\n\n📦 **В кейсе ничего особенного.**"
@@ -1739,32 +2112,56 @@ async def инвентарь(ctx):
         ctx.author.id
     )
 
-    if not inventory:
-        await ctx.send(
-            "🎒 Инвентарь пуст."
-        )
-        return
+    materials_data = get_materials(
+        ctx.author.id
+    )
+
+    hat_inventory = get_hat_inventory(
+        ctx.author.id
+    )
 
     text = (
         f"🎒 **ИНВЕНТАРЬ {ctx.author.display_name}**\n\n"
     )
 
-    for item, amount in inventory:
-        rarity = items.get(
-            item,
-            {}
-        ).get(
-            "rarity",
-            ""
-        )
+    if inventory:
+        for item, amount in inventory:
+            rarity = items.get(
+                item,
+                {}
+            ).get(
+                "rarity",
+                ""
+            )
 
-        text += (
-            f"{item} × **{amount}** "
-            f"{rarity}\n"
-        )
+            text += (
+                f"{item} × **{amount}** "
+                f"{rarity}\n"
+            )
+    else:
+        text += "📦 Обычных предметов нет.\n"
+
+    text += "\n♻️ **РЕСУРСЫ**\n"
+
+    text += (
+        f"🪨 Скрап × **{materials_data['скрап']}**\n"
+        f"🔩 Метал × **{materials_data['метал']}**\n"
+        f"⚙️ МВК × **{materials_data['мвк']}**\n"
+    )
+
+    if hat_inventory:
+        text += "\n🧢 **ШАПКИ**\n"
+
+        for hat, amount in hat_inventory:
+            text += (
+                f"{hat} × **{amount}**\n"
+            )
 
     await ctx.send(
-        text
+        text,
+        view=InventoryView(
+            ctx.author.id
+        )
     )
 
 
@@ -1827,6 +2224,232 @@ async def продать(
     await ctx.send(
         f"💸 Ты продал **{found}** "
         f"за **{sell_price:,} монет**."
+    )
+
+
+@bot.command()
+async def утилизировать(
+    ctx,
+    *,
+    item=None
+):
+    if not item:
+        await ctx.send(
+            "❌ Напиши предмет.\n"
+            "Например: `!утилизировать Ubuntu`"
+        )
+        return
+
+    inventory = get_inventory(
+        ctx.author.id
+    )
+
+    found = None
+
+    for owned_item, amount in inventory:
+        if item.lower() == owned_item.lower():
+            found = owned_item
+            break
+
+    if not found:
+        for owned_item, amount in inventory:
+            if item.lower() in owned_item.lower():
+                found = owned_item
+                break
+
+    if not found:
+        await ctx.send(
+            "❌ У тебя нет такого предмета."
+        )
+        return
+
+    rewards = get_scrap_reward(
+        found
+    )
+
+    if not rewards:
+        await ctx.send(
+            "❌ Этот предмет нельзя утилизировать."
+        )
+        return
+
+    if not remove_item(
+        ctx.author.id,
+        found
+    ):
+        await ctx.send(
+            "❌ Не удалось утилизировать предмет."
+        )
+        return
+
+    for material, amount in rewards.items():
+        add_material(
+            ctx.author.id,
+            material,
+            amount
+        )
+
+    await ctx.send(
+        f"♻️ **ПРЕДМЕТ УТИЛИЗИРОВАН**\n\n"
+        f"📦 {found}\n\n"
+        f"{format_materials(rewards)}"
+    )
+
+
+@bot.command()
+async def ресурсы(ctx):
+    data = get_materials(
+        ctx.author.id
+    )
+
+    await ctx.send(
+        f"♻️ **ТВОИ РЕСУРСЫ**\n\n"
+        f"🪨 Скрап × **{data['скрап']}**\n"
+        f"🔩 Метал × **{data['метал']}**\n"
+        f"⚙️ МВК × **{data['мвк']}**\n\n"
+        f"💡 Для крафта шапки нужно 3 одинаковых ресурса."
+    )
+
+
+@bot.command()
+async def крафт(
+    ctx,
+    *,
+    recipe=None
+):
+    if not recipe:
+        await ctx.send(
+            "❌ Используй:\n"
+            "`!крафт шапка скрап`\n"
+            "`!крафт шапка метал`\n"
+            "`!крафт шапка мвк`"
+        )
+        return
+
+    recipe = recipe.lower().strip()
+
+    if recipe.startswith("шапка "):
+        material = recipe.replace(
+            "шапка ",
+            "",
+            1
+        ).strip()
+    else:
+        await ctx.send(
+            "❌ Используй:\n"
+            "`!крафт шапка скрап`\n"
+            "`!крафт шапка метал`\n"
+            "`!крафт шапка мвк`"
+        )
+        return
+
+    if material not in materials:
+        await ctx.send(
+            "❌ Неизвестный материал.\n"
+            "Доступно: `скрап`, `метал`, `мвк`."
+        )
+        return
+
+    if not remove_material(
+        ctx.author.id,
+        material,
+        3
+    ):
+        await ctx.send(
+            f"❌ Нужно **3** {materials[material]['name']}."
+        )
+        return
+
+    chance = None
+    result_hat = None
+
+    for hat, data in hats.items():
+        if data["material"] == material:
+            chance = data["chance"]
+            result_hat = hat
+            break
+
+    if random.random() > chance:
+        await ctx.send(
+            f"💀 **КРАФТ ПРОВАЛЕН!**\n\n"
+            f"Ты потратил 3 × {materials[material]['name']}.\n"
+            f"Шапка не получилась.\n\n"
+            f"🎲 Шанс успеха: **{int(chance * 100)}%**"
+        )
+        return
+
+    add_hat(
+        ctx.author.id,
+        result_hat
+    )
+
+    await ctx.send(
+        f"🎉 **КРАФТ УДАЛСЯ!**\n\n"
+        f"🧢 Ты получил **{result_hat}**!\n"
+        f"🎲 Шанс успеха был **{int(chance * 100)}%**.\n\n"
+        f"Надеть: `!шапка {result_hat}`"
+    )
+
+
+@bot.command()
+async def шапка(
+    ctx,
+    *,
+    hat=None
+):
+    if not hat:
+        await ctx.send(
+            "❌ Напиши название шапки.\n"
+            "Например: `!шапка Шапка из скрапа`\n"
+            "Или `!шапка убрать`."
+        )
+        return
+
+    if hat.lower() == "убрать":
+        clear_hat(
+            ctx.author.id
+        )
+
+        await ctx.send(
+            "🧢 Шапка снята."
+        )
+        return
+
+    found = None
+
+    for hat_name in hats:
+        if hat.lower() == hat_name.lower():
+            found = hat_name
+            break
+
+    if not found:
+        for hat_name in hats:
+            if hat.lower() in hat_name.lower():
+                found = hat_name
+                break
+
+    if not found:
+        await ctx.send(
+            "❌ Такой шапки не существует."
+        )
+        return
+
+    if not has_hat(
+        ctx.author.id,
+        found
+    ):
+        await ctx.send(
+            "❌ У тебя нет этой шапки."
+        )
+        return
+
+    set_hat(
+        ctx.author.id,
+        found
+    )
+
+    await ctx.send(
+        f"🧢 Теперь на тебе **{found}**!"
     )
 
 
@@ -1912,7 +2535,11 @@ async def профиль(
         title,
         showcase,
         level,
-        xp
+        xp,
+        scrap,
+        metal,
+        mvk,
+        hat
     ) = row
 
     needed = xp_needed(
@@ -1963,6 +2590,22 @@ async def профиль(
     embed.add_field(
         name="🖼️ Витрина",
         value=showcase or "Пусто",
+        inline=False
+    )
+
+    embed.add_field(
+        name="🧢 Шапка",
+        value=hat or "Нет",
+        inline=False
+    )
+
+    embed.add_field(
+        name="♻️ Ресурсы",
+        value=(
+            f"🪨 {scrap}  "
+            f"🔩 {metal}  "
+            f"⚙️ {mvk}"
+        ),
         inline=False
     )
 
@@ -2176,13 +2819,13 @@ async def угадай(ctx):
     if guess == number:
         add_coins(
             ctx.author.id,
-            100
+            50
         )
 
         await ctx.send(
             f"🎯 **УГАДАЛ!**\n"
             f"Число было **{number}**.\n"
-            f"💰 +100 монет."
+            f"💰 +50 монет."
         )
 
     else:
@@ -2360,7 +3003,7 @@ async def забрать(ctx):
 
     await ctx.send(
         f"💰 **УСПЕЛ!**\n"
-        f"{ctx.author.mention}, ты забрал "
+        f"{ctx.author.display_name}, ты забрал "
         f"**{amount:,} монет**!"
     )
 
@@ -2403,8 +3046,8 @@ async def дроппинг(ctx):
         await ctx.send(
             f"🔔 {ctx.author.mention}, "
             f"ты подписался на дропы!\n"
-            f"Теперь ты будешь получать уведомления "
-            f"о денежных дропах."
+            f"Теперь роль сохранена, но сам дроп "
+            f"не будет никого пинговать."
         )
 
 
