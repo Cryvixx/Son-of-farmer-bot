@@ -29,7 +29,14 @@ DROP_ROLE_NAME = "Дроп"
 
 active_drop = None
 drop_task = None
+exchange_task = None
 case_open_lock = asyncio.Lock()
+
+EXCHANGE_CHANNEL_PREFIX = "🐧-курс-"
+EXCHANGE_MIN = 0.60
+EXCHANGE_MAX = 2.40
+FARM_BASE_PER_HOUR = 2.0
+FARM_MAX_OFFLINE_HOURS = 24
 
 
 items = {
@@ -64,7 +71,13 @@ items = {
     "🔥 Лицензия на огонь": {"price": 900, "rarity": "epic"},
     "💎 Алмазная анальная пробка": {"price": 2250, "rarity": "legendary"},
     "👑 Атом Лёхи Пружины": {"price": 5000, "rarity": "artifact"},
-    "📖 26 том магической битвы": {"price": 200, "rarity": "rare"}
+    "📖 26 том магической битвы": {"price": 200, "rarity": "rare"},
+    "🖥️ GeForce GT 710": {"price": 120, "rarity": "common"},
+    "🖥️ GTX 1050 Ti": {"price": 300, "rarity": "uncommon"},
+    "🖥️ GTX 1660 Super": {"price": 650, "rarity": "rare"},
+    "🖥️ RTX 3060": {"price": 1200, "rarity": "epic"},
+    "🖥️ RTX 4070 Super": {"price": 2800, "rarity": "legendary"},
+    "🖥️ RTX 5090": {"price": 6500, "rarity": "artifact"}
 }
 
 
@@ -79,7 +92,8 @@ cases = {
             "🧦 Чулок": 40,
             "💾 Ubuntu": 10,
             "💾 Debian": 5,
-            "⚡ Lit Energy": 3
+            "⚡ Lit Energy": 3,
+            "🖥️ GeForce GT 710": 2
         }
     },
     "🥔 Кейс лукашенко": {
@@ -94,7 +108,8 @@ cases = {
             "⚡ Monster": 15,
             "🚜 МТЗ-82": 5,
             "🚜 Беларус-1221": 4,
-            "🚜 John Deere": 1
+            "🚜 John Deere": 1,
+            "🖥️ GTX 1050 Ti": 2
         }
     },
     "🐸 Кейс жаби жаби": {
@@ -108,7 +123,8 @@ cases = {
             "💜 Аметист": 27,
             "⚡ Monster": 20,
             "⚡ Red Bull": 11,
-            "💾 Fedora": 4
+            "💾 Fedora": 4,
+            "🖥️ GTX 1660 Super": 2
         }
     },
     "💀 Кейс головного мозга": {
@@ -123,7 +139,8 @@ cases = {
             "💾 Manjaro": 17,
             "🦴 Dragonclaw Hook": 8,
             "🎮 Unity": 6,
-            "💾 Arch Linux": 3
+            "💾 Arch Linux": 3,
+            "🖥️ RTX 3060": 1.5
         }
     },
     "🔥 Хз огонь": {
@@ -139,7 +156,8 @@ cases = {
             "🎮 Source Engine": 13,
             "💾 Arch Linux": 9,
             "💾 Gentoo": 5,
-            "🎮 CryEngine": 2
+            "🎮 CryEngine": 2,
+            "🖥️ RTX 4070 Super": 1
         }
     },
     "💎 Кейс алмазик": {
@@ -155,7 +173,9 @@ cases = {
             "🚜 К-744": 7,
             "🎮 CryEngine": 12,
             "🦴 Dragonclaw Hook": 10,
-            "💾 Gentoo": 6
+            "💾 Gentoo": 6,
+            "🖥️ RTX 4070 Super": 2,
+            "🖥️ RTX 5090": 0.35
         }
     },
     "👑 Кейс Лёхи Пружины": {
@@ -165,15 +185,289 @@ cases = {
         "item_chance": 0.38,
         "unlock": 10,
         "loot": {
-            "👑 Атом Лёхи Пружины": 8,
+            "👑 Атом Лёхи Пружины": 1,
             "🚜 К-744": 15,
             "💎 Алмазная анальная пробка": 20,
             "🎮 CryEngine": 18,
             "🦴 Dragonclaw Hook": 17,
-            "💾 Gentoo": 22
+            "💾 Gentoo": 22,
+            "🖥️ RTX 4070 Super": 8,
+            "🖥️ RTX 5090": 6
         }
     }
 }
+
+
+rarity_names = {
+    "common": "⚪ Обычный",
+    "uncommon": "🟢 Необычный",
+    "rare": "🔵 Редкий",
+    "epic": "🟣 Эпический",
+    "legendary": "🟡 Легендарный",
+    "artifact": "🔴 Артефакт"
+}
+
+gpu_power = {
+    "🖥️ GeForce GT 710": 0.6,
+    "🖥️ GTX 1050 Ti": 1.0,
+    "🖥️ GTX 1660 Super": 1.5,
+    "🖥️ RTX 3060": 2.2,
+    "🖥️ RTX 4070 Super": 3.3,
+    "🖥️ RTX 5090": 5.0
+}
+
+linux_power_by_rarity = {
+    "common": 1.0,
+    "uncommon": 1.15,
+    "rare": 1.4,
+    "epic": 1.8,
+    "legendary": 2.2,
+    "artifact": 2.8
+}
+
+linux_distros = {
+    name for name in items
+    if name.startswith("💾 ")
+}
+
+FARM_COST = {
+    "scrap": 20,
+    "metal": 10,
+    "mvk": 3
+}
+
+
+def rarity_text(item):
+    if item not in items:
+        return "❔ Неизвестная"
+    return rarity_names.get(items[item]["rarity"], items[item]["rarity"])
+
+
+def is_gpu(item):
+    return item in gpu_power
+
+
+def is_linux(item):
+    return item in linux_distros
+
+
+def remove_one_item(user_id, item):
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+
+    c.execute(
+        "SELECT amount FROM inventory WHERE user_id = ? AND item = ?",
+        (user_id, item)
+    )
+
+    result = c.fetchone()
+
+    if result is None or result[0] <= 0:
+        conn.close()
+        return False
+
+    if result[0] == 1:
+        c.execute(
+            "DELETE FROM inventory WHERE user_id = ? AND item = ?",
+            (user_id, item)
+        )
+    else:
+        c.execute(
+            "UPDATE inventory SET amount = amount - 1 WHERE user_id = ? AND item = ?",
+            (user_id, item)
+        )
+
+    conn.commit()
+    conn.close()
+    return True
+
+
+def get_exchange_rate():
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+    c.execute("SELECT value FROM bot_state WHERE key = 'penguin_rate'")
+    result = c.fetchone()
+    conn.close()
+
+    if result is None:
+        return 1.0
+
+    return float(result[0])
+
+
+def set_exchange_rate(rate):
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+    c.execute("""
+        INSERT INTO bot_state (key, value)
+        VALUES ('penguin_rate', ?)
+        ON CONFLICT(key) DO UPDATE SET value = excluded.value
+    """, (str(rate),))
+    conn.commit()
+    conn.close()
+
+
+def get_farm(user_id):
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+    c.execute("""
+        SELECT built, gpu, distro, last_collect
+        FROM farms
+        WHERE user_id = ?
+    """, (user_id,))
+    result = c.fetchone()
+    conn.close()
+    return result
+
+
+def farm_rate_per_hour(gpu, distro):
+    if not gpu or not distro:
+        return 0.0
+
+    if gpu not in gpu_power or distro not in items:
+        return 0.0
+
+    linux_rarity = items[distro]["rarity"]
+
+    return (
+        FARM_BASE_PER_HOUR
+        * gpu_power[gpu]
+        * linux_power_by_rarity.get(linux_rarity, 1.0)
+    )
+
+
+def calculate_farm_pending(user_id):
+    farm = get_farm(user_id)
+
+    if farm is None:
+        return 0.0, 0.0, None, None
+
+    built, gpu, distro, last_collect = farm
+
+    if not built or not gpu or not distro:
+        return 0.0, 0.0, gpu, distro
+
+    rate = farm_rate_per_hour(gpu, distro)
+    elapsed = max(0, int(time.time()) - int(last_collect))
+    elapsed = min(elapsed, FARM_MAX_OFFLINE_HOURS * 3600)
+    amount = rate * (elapsed / 3600)
+
+    return amount, rate, gpu, distro
+
+
+def add_penguins(user_id, amount):
+    ensure_user(user_id)
+
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+    c.execute(
+        "UPDATE users SET penguins = penguins + ? WHERE user_id = ?",
+        (amount, user_id)
+    )
+    conn.commit()
+    conn.close()
+
+
+def get_penguins(user_id):
+    ensure_user(user_id)
+
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+    c.execute(
+        "SELECT penguins FROM users WHERE user_id = ?",
+        (user_id,)
+    )
+    result = c.fetchone()
+    conn.close()
+    return float(result[0])
+
+
+async def ensure_exchange_channel(guild):
+    if guild is None:
+        return None
+
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+    c.execute(
+        "SELECT channel_id FROM exchange_channels WHERE guild_id = ?",
+        (guild.id,)
+    )
+    result = c.fetchone()
+    conn.close()
+
+    channel = guild.get_channel(result[0]) if result else None
+    rate = get_exchange_rate()
+    wanted_name = f"{EXCHANGE_CHANNEL_PREFIX}{rate:.2f}".replace(".", "-")
+
+    if channel is None:
+        overwrites = {
+            guild.default_role: discord.PermissionOverwrite(
+                view_channel=True,
+                send_messages=False
+            ),
+            guild.me: discord.PermissionOverwrite(
+                view_channel=True,
+                send_messages=True,
+                manage_channels=True
+            )
+        }
+
+        try:
+            channel = await guild.create_text_channel(
+                wanted_name,
+                overwrites=overwrites,
+                reason="Канал курса пингвинчиков"
+            )
+        except discord.Forbidden:
+            return None
+
+        conn = sqlite3.connect(DB)
+        c = conn.cursor()
+        c.execute("""
+            INSERT INTO exchange_channels (guild_id, channel_id)
+            VALUES (?, ?)
+            ON CONFLICT(guild_id)
+            DO UPDATE SET channel_id = excluded.channel_id
+        """, (guild.id, channel.id))
+        conn.commit()
+        conn.close()
+
+    elif channel.name != wanted_name:
+        try:
+            await channel.edit(name=wanted_name)
+        except discord.Forbidden:
+            pass
+
+    return channel
+
+
+async def exchange_rate_loop():
+    await bot.wait_until_ready()
+
+    while not bot.is_closed():
+        await asyncio.sleep(random.randint(300, 900))
+
+        old_rate = get_exchange_rate()
+        movement = random.uniform(-0.30, 0.30)
+
+        if random.random() < 0.08:
+            movement += random.choice([-1, 1]) * random.uniform(0.20, 0.55)
+
+        new_rate = round(
+            max(EXCHANGE_MIN, min(EXCHANGE_MAX, old_rate + movement)),
+            2
+        )
+
+        if new_rate == old_rate:
+            new_rate = round(
+                random.uniform(EXCHANGE_MIN, EXCHANGE_MAX),
+                2
+            )
+
+        set_exchange_rate(new_rate)
+
+        for guild in bot.guilds:
+            await ensure_exchange_channel(guild)
 
 
 materials = {
@@ -388,6 +682,43 @@ def init_db():
             user_id INTEGER PRIMARY KEY,
             work_until INTEGER DEFAULT 0
         )
+    """)
+
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS farms (
+            user_id INTEGER PRIMARY KEY,
+            built INTEGER DEFAULT 0,
+            gpu TEXT,
+            distro TEXT,
+            last_collect INTEGER DEFAULT 0
+        )
+    """)
+
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS bot_state (
+            key TEXT PRIMARY KEY,
+            value TEXT
+        )
+    """)
+
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS exchange_channels (
+            guild_id INTEGER PRIMARY KEY,
+            channel_id INTEGER
+        )
+    """)
+
+    c.execute("PRAGMA table_info(users)")
+    user_columns = [row[1] for row in c.fetchall()]
+
+    if "penguins" not in user_columns:
+        c.execute(
+            "ALTER TABLE users ADD COLUMN penguins REAL DEFAULT 0"
+        )
+
+    c.execute("""
+        INSERT OR IGNORE INTO bot_state (key, value)
+        VALUES ('penguin_rate', '1.00')
     """)
 
     conn.commit()
@@ -776,15 +1107,34 @@ class InventoryView(discord.ui.View):
             )
             return
 
+        c.execute(
+            "SELECT showcase_item FROM users WHERE user_id = ?",
+            (self.user_id,)
+        )
+        showcase = c.fetchone()[0]
+
         total = 0
+        sold_items = []
 
         for item, amount in inventory:
-            if item in items:
+            if item in items and item != showcase:
                 total += items[item]["price"] * amount
+                sold_items.append(item)
+
+        if not sold_items:
+            conn.close()
+
+            await interaction.response.send_message(
+                "❌ Нечего продавать: предмет с витрины защищён.",
+                ephemeral=True
+            )
+            return
+
+        placeholders = ",".join("?" for _ in sold_items)
 
         c.execute(
-            "DELETE FROM inventory WHERE user_id = ?",
-            (self.user_id,)
+            f"DELETE FROM inventory WHERE user_id = ? AND item IN ({placeholders})",
+            (self.user_id, *sold_items)
         )
 
         c.execute(
@@ -797,7 +1147,8 @@ class InventoryView(discord.ui.View):
 
         await interaction.response.send_message(
             f"💰 Продано всех обычных предметов на **{total}** монет.\n"
-            f"🏆 Титулы и 🎩 шапки не затронуты."
+            f"🏆 Титулы и 🎩 шапки не затронуты.\n"
+            f"🖼️ Предмет с витрины тоже сохранён."
         )
 
 
@@ -885,10 +1236,10 @@ class MogBattleView(discord.ui.View):
                     f"⚔️ **МОГ-БАТТЛ**\n\n"
                     f"🎁 Кейс: **{self.case_name}**\n\n"
                     f"{self.challenger.mention}\n"
-                    f"└ {challenger_item if challenger_item else '💰 Только деньги'} + {challenger_money} монет\n"
+                    f"└ {challenger_item + ' [' + rarity_text(challenger_item) + ']' if challenger_item else '💰 Только деньги'} + {challenger_money} монет\n"
                     f"└ Стоимость: **{challenger_value:.0f}**\n\n"
                     f"{self.opponent.mention}\n"
-                    f"└ {opponent_item if opponent_item else '💰 Только деньги'} + {opponent_money} монет\n"
+                    f"└ {opponent_item + ' [' + rarity_text(opponent_item) + ']' if opponent_item else '💰 Только деньги'} + {opponent_money} монет\n"
                     f"└ Стоимость: **{opponent_value:.0f}**\n\n"
                     f"🤝 **Ничья!**\n"
                     f"💰 Ставки возвращены.\n"
@@ -933,11 +1284,13 @@ class MogBattleView(discord.ui.View):
         add_xp(loser.id, 5)
 
         challenger_drop = (
-            challenger_item if challenger_item else "💰 Только деньги"
+            f"{challenger_item} [{rarity_text(challenger_item)}]"
+            if challenger_item else "💰 Только деньги"
         )
 
         opponent_drop = (
-            opponent_item if opponent_item else "💰 Только деньги"
+            f"{opponent_item} [{rarity_text(opponent_item)}]"
+            if opponent_item else "💰 Только деньги"
         )
 
         await interaction.response.edit_message(
@@ -992,14 +1345,20 @@ class MogBattleView(discord.ui.View):
 
 @bot.event
 async def on_ready():
-    global drop_task
+    global drop_task, exchange_task
 
     init_db()
 
     print(f"Бот запущен: {bot.user} | ID: {bot.user.id}")
 
+    for guild in bot.guilds:
+        await ensure_exchange_channel(guild)
+
     if drop_task is None or drop_task.done():
         drop_task = asyncio.create_task(money_drop_loop())
+
+    if exchange_task is None or exchange_task.done():
+        exchange_task = asyncio.create_task(exchange_rate_loop())
 
 
 @bot.command()
@@ -1033,7 +1392,14 @@ async def команды(ctx):
         "`!цитата` — случайная цитата\n"
         "`!могбатл @user название кейса` — вызвать на мог-баттл\n"
         "`!забрать` — забрать дроп\n"
-        "`!дроппинг` — подписка на дропы"
+        "`!дроппинг` — подписка на дропы\n"
+        "`!ферма` — состояние фермы\n"
+        "`!ферма крафт` — скрафтить ферму\n"
+        "`!ферма видеокарта название` — поставить видеокарту\n"
+        "`!ферма линукс название` — поставить дистрибутив\n"
+        "`!собрать` — забрать намайненные 🐧\n"
+        "`!обменять количество` — обменять 🐧 на монеты\n"
+        "`!курс` — текущий курс 🐧"
     )
 
 
@@ -1252,7 +1618,10 @@ async def кейс(ctx, *, case_name=None):
     )
 
     if item:
-        text += f"\n🎁 Предмет: **{item}**"
+        text += (
+            f"\n🎁 Предмет: **{item}**"
+            f"\n✨ Редкость: **{rarity_text(item)}**"
+        )
     else:
         text += "\n🎁 Предмет: ничего"
 
@@ -1290,7 +1659,16 @@ async def инвентарь(ctx):
         text += "**📦 Предметы:**\n"
 
         for item, amount in inventory:
-            text += f"{item} ×{amount}\n"
+            data = items.get(item)
+
+            if data:
+                rarity = rarity_text(item)
+                text += (
+                    f"{item} ×{amount} — 💰 **{data['price']}**/шт. "
+                    f"— {rarity}\n"
+                )
+            else:
+                text += f"{item} ×{amount}\n"
     else:
         text += "📦 Предметов нет.\n"
 
@@ -1341,12 +1719,28 @@ async def продать(ctx, *, item_name=None):
         await ctx.send("❌ Титулы продавать нельзя.")
         return
 
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+    c.execute(
+        "SELECT showcase_item FROM users WHERE user_id = ?",
+        (ctx.author.id,)
+    )
+    showcase = c.fetchone()[0]
+    conn.close()
+
     item, amount = find_item_in_inventory(
         ctx.author.id,
         item_name
     )
 
     if item is not None:
+        if item == showcase:
+            await ctx.send(
+                "❌ Этот предмет стоит на витрине. "
+                "Сначала используй `!витрина убрать`."
+            )
+            return
+
         price = items[item]["price"]
         total = price * amount
 
@@ -1378,6 +1772,13 @@ async def продать(ctx, *, item_name=None):
     )
 
     if hat is not None:
+        if hat == showcase:
+            await ctx.send(
+                "❌ Эта шапка стоит на витрине. "
+                "Сначала используй `!витрина убрать`."
+            )
+            return
+
         price = hats[hat]["value"]
         total = price * hat_amount
 
@@ -1592,6 +1993,309 @@ async def крафт(ctx, category=None, material=None):
 
 
 @bot.command()
+async def ферма(ctx, action=None, *, value=None):
+    ensure_user(ctx.author.id)
+
+    if action is None:
+        farm = get_farm(ctx.author.id)
+
+        if farm is None or not farm[0]:
+            await ctx.send(
+                "🏚️ У тебя ещё нет фермы.\n"
+                f"Крафт: **{FARM_COST['scrap']} скрапа**, "
+                f"**{FARM_COST['metal']} метала** и "
+                f"**{FARM_COST['mvk']} МВК**.\n"
+                "Используй `!ферма крафт`."
+            )
+            return
+
+        pending, rate, gpu, distro = calculate_farm_pending(ctx.author.id)
+        penguins = get_penguins(ctx.author.id)
+
+        status = "🟢 Работает" if gpu and distro else "🔴 Не работает"
+
+        await ctx.send(
+            f"🏭 **Твоя ферма**\n\n"
+            f"Статус: **{status}**\n"
+            f"🖥️ Видеокарта: **{gpu or 'не установлена'}**\n"
+            f"💾 Linux: **{distro or 'не установлен'}**\n"
+            f"⚡ Доход: **{rate:.2f} 🐧/час**\n"
+            f"📦 Накоплено на ферме: **{pending:.2f} 🐧**\n"
+            f"🐧 В кошельке: **{penguins:.2f}**\n"
+            f"💹 Курс: **1 🐧 = {get_exchange_rate():.2f} монет**"
+        )
+        return
+
+    action = action.lower()
+
+    if action == "крафт":
+        farm = get_farm(ctx.author.id)
+
+        if farm is not None and farm[0]:
+            await ctx.send("❌ У тебя уже есть ферма.")
+            return
+
+        conn = sqlite3.connect(DB)
+        c = conn.cursor()
+        c.execute(
+            "SELECT scrap, metal, mvk FROM users WHERE user_id = ?",
+            (ctx.author.id,)
+        )
+        scrap, metal, mvk = c.fetchone()
+
+        if (
+            scrap < FARM_COST["scrap"]
+            or metal < FARM_COST["metal"]
+            or mvk < FARM_COST["mvk"]
+        ):
+            conn.close()
+            await ctx.send(
+                "❌ Не хватает ресурсов.\n"
+                f"Нужно: **{FARM_COST['scrap']} скрапа**, "
+                f"**{FARM_COST['metal']} метала**, "
+                f"**{FARM_COST['mvk']} МВК**."
+            )
+            return
+
+        now = int(time.time())
+
+        c.execute("""
+            UPDATE users
+            SET scrap = scrap - ?,
+                metal = metal - ?,
+                mvk = mvk - ?
+            WHERE user_id = ?
+        """, (
+            FARM_COST["scrap"],
+            FARM_COST["metal"],
+            FARM_COST["mvk"],
+            ctx.author.id
+        ))
+
+        c.execute("""
+            INSERT INTO farms (user_id, built, gpu, distro, last_collect)
+            VALUES (?, 1, NULL, NULL, ?)
+            ON CONFLICT(user_id)
+            DO UPDATE SET built = 1,
+                          gpu = NULL,
+                          distro = NULL,
+                          last_collect = excluded.last_collect
+        """, (ctx.author.id, now))
+
+        conn.commit()
+        conn.close()
+
+        await ctx.send(
+            "🏭 **ФЕРМА СКРАФЧЕНА СО 100% ШАНСОМ!**\n\n"
+            "Теперь поставь в неё видеокарту и Linux-дистрибутив.\n"
+            "`!ферма видеокарта название`\n"
+            "`!ферма линукс название`"
+        )
+        return
+
+    farm = get_farm(ctx.author.id)
+
+    if farm is None or not farm[0]:
+        await ctx.send("❌ Сначала скрафти ферму: `!ферма крафт`.")
+        return
+
+    if action in ("видеокарта", "gpu"):
+        if not value:
+            await ctx.send(
+                "Использование: `!ферма видеокарта название`"
+            )
+            return
+
+        item, amount = find_item_in_inventory(ctx.author.id, value)
+
+        if item is None or not is_gpu(item):
+            await ctx.send(
+                "❌ У тебя нет такой видеокарты для фермы."
+            )
+            return
+
+        if item == farm[1]:
+            await ctx.send("❌ Эта видеокарта уже стоит в ферме.")
+            return
+
+        pending, _, old_gpu, old_distro = calculate_farm_pending(ctx.author.id)
+
+        if pending > 0:
+            add_penguins(ctx.author.id, pending)
+
+        if not remove_one_item(ctx.author.id, item):
+            await ctx.send("❌ Не удалось забрать видеокарту из инвентаря.")
+            return
+
+        if old_gpu:
+            add_item(ctx.author.id, old_gpu)
+
+        conn = sqlite3.connect(DB)
+        c = conn.cursor()
+        c.execute(
+            "UPDATE farms SET gpu = ?, last_collect = ? WHERE user_id = ?",
+            (item, int(time.time()), ctx.author.id)
+        )
+        conn.commit()
+        conn.close()
+
+        rate = farm_rate_per_hour(item, old_distro)
+
+        await ctx.send(
+            f"🖥️ В ферму установлена **{item}**.\n"
+            f"✨ Редкость: **{rarity_text(item)}**\n"
+            f"⚡ Текущий доход: **{rate:.2f} 🐧/час**"
+        )
+        return
+
+    if action in ("линукс", "linux", "дистро"):
+        if not value:
+            await ctx.send(
+                "Использование: `!ферма линукс название`"
+            )
+            return
+
+        item, amount = find_item_in_inventory(ctx.author.id, value)
+
+        if item is None or not is_linux(item):
+            await ctx.send(
+                "❌ У тебя нет такого Linux-дистрибутива."
+            )
+            return
+
+        if item == farm[2]:
+            await ctx.send("❌ Этот Linux уже стоит в ферме.")
+            return
+
+        pending, _, old_gpu, old_distro = calculate_farm_pending(ctx.author.id)
+
+        if pending > 0:
+            add_penguins(ctx.author.id, pending)
+
+        if not remove_one_item(ctx.author.id, item):
+            await ctx.send("❌ Не удалось забрать дистрибутив из инвентаря.")
+            return
+
+        if old_distro:
+            add_item(ctx.author.id, old_distro)
+
+        conn = sqlite3.connect(DB)
+        c = conn.cursor()
+        c.execute(
+            "UPDATE farms SET distro = ?, last_collect = ? WHERE user_id = ?",
+            (item, int(time.time()), ctx.author.id)
+        )
+        conn.commit()
+        conn.close()
+
+        rate = farm_rate_per_hour(old_gpu, item)
+
+        await ctx.send(
+            f"💾 На ферму установлен **{item}**.\n"
+            f"✨ Редкость: **{rarity_text(item)}**\n"
+            f"⚡ Текущий доход: **{rate:.2f} 🐧/час**"
+        )
+        return
+
+    await ctx.send(
+        "❌ Использование: `!ферма`, `!ферма крафт`, "
+        "`!ферма видеокарта название`, `!ферма линукс название`."
+    )
+
+
+@bot.command()
+async def собрать(ctx):
+    ensure_user(ctx.author.id)
+
+    farm = get_farm(ctx.author.id)
+
+    if farm is None or not farm[0]:
+        await ctx.send("❌ У тебя нет фермы.")
+        return
+
+    amount, rate, gpu, distro = calculate_farm_pending(ctx.author.id)
+
+    if not gpu or not distro:
+        await ctx.send(
+            "❌ Ферма не работает. Нужны и видеокарта, и Linux."
+        )
+        return
+
+    if amount < 0.01:
+        await ctx.send("🐧 Пока почти ничего не намайнилось.")
+        return
+
+    add_penguins(ctx.author.id, amount)
+
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+    c.execute(
+        "UPDATE farms SET last_collect = ? WHERE user_id = ?",
+        (int(time.time()), ctx.author.id)
+    )
+    conn.commit()
+    conn.close()
+
+    await ctx.send(
+        f"🐧 Ты собрал **{amount:.2f} пингвинчиков**.\n"
+        f"⚡ Ферма майнит **{rate:.2f} 🐧/час**.\n"
+        f"🐧 Баланс: **{get_penguins(ctx.author.id):.2f}**"
+    )
+
+
+@bot.command()
+async def курс(ctx):
+    await ctx.send(
+        f"💹 Текущий курс: **1 🐧 = {get_exchange_rate():.2f} монет**."
+    )
+
+
+@bot.command()
+async def обменять(ctx, amount: float = None):
+    ensure_user(ctx.author.id)
+
+    if amount is None or amount <= 0:
+        await ctx.send(
+            "Использование: `!обменять количество`"
+        )
+        return
+
+    penguins = get_penguins(ctx.author.id)
+
+    if penguins + 1e-9 < amount:
+        await ctx.send(
+            f"❌ Недостаточно 🐧. У тебя **{penguins:.2f}**."
+        )
+        return
+
+    rate = get_exchange_rate()
+    coins = int(amount * rate)
+
+    if coins <= 0:
+        await ctx.send("❌ Слишком маленькая сумма для обмена.")
+        return
+
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+    c.execute(
+        "UPDATE users SET penguins = penguins - ? WHERE user_id = ?",
+        (amount, ctx.author.id)
+    )
+    c.execute(
+        "UPDATE users SET coins = coins + ? WHERE user_id = ?",
+        (coins, ctx.author.id)
+    )
+    conn.commit()
+    conn.close()
+
+    await ctx.send(
+        f"💱 Обменено **{amount:.2f} 🐧** по курсу "
+        f"**{rate:.2f}**.\n"
+        f"💰 Получено: **{coins} монет**."
+    )
+
+
+@bot.command()
 async def шапка(ctx, *, hat_name=None):
     if not hat_name:
         await ctx.send(
@@ -1712,7 +2416,7 @@ async def профиль(ctx):
 
     c.execute("""
         SELECT coins, wins, losses, title, showcase_item,
-               level, xp, hat
+               level, xp, hat, penguins
         FROM users
         WHERE user_id = ?
     """, (ctx.author.id,))
@@ -1720,7 +2424,7 @@ async def профиль(ctx):
     data = c.fetchone()
     conn.close()
 
-    coins, wins, losses, title, showcase, level, xp, hat = data
+    coins, wins, losses, title, showcase, level, xp, hat, penguins = data
 
     embed = discord.Embed(
         title=f"👤 Профиль {ctx.author.display_name}"
@@ -1733,6 +2437,12 @@ async def профиль(ctx):
     embed.add_field(
         name="💰 Баланс",
         value=f"{coins} монет",
+        inline=True
+    )
+
+    embed.add_field(
+        name="🐧 Пингвинчики",
+        value=f"{penguins:.2f} 🐧",
         inline=True
     )
 
@@ -2050,20 +2760,20 @@ async def money_drop_loop():
 
         roll = random.random()
 
-        if roll < 0.003:
-            amount = random.randint(200, 400)
+        if roll < 0.008:
+            amount = random.randint(450, 900)
             drop_type = "💎 УЛЬТРА-ДРОП"
 
-        elif roll < 0.018:
-            amount = random.randint(80, 180)
+        elif roll < 0.045:
+            amount = random.randint(180, 420)
             drop_type = "🔥 МЕГА-ДРОП"
 
-        elif roll < 0.078:
-            amount = random.randint(30, 80)
+        elif roll < 0.18:
+            amount = random.randint(70, 180)
             drop_type = "💰 ЖИРНЫЙ ДРОП"
 
         else:
-            amount = random.randint(5, 30)
+            amount = random.randint(20, 70)
             drop_type = "💸 ДРОП"
 
         role = discord.utils.get(
