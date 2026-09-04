@@ -33,9 +33,9 @@ exchange_task = None
 case_open_lock = asyncio.Lock()
 
 EXCHANGE_CHANNEL_PREFIX = "🐧-курс-"
-EXCHANGE_MIN = 0.60
-EXCHANGE_MAX = 2.40
-FARM_BASE_PER_HOUR = 2.0
+EXCHANGE_MIN = 30000
+EXCHANGE_MAX = 70000
+FARM_BASE_PER_HOUR = 0.00001
 FARM_MAX_OFFLINE_HOURS = 24
 
 
@@ -445,17 +445,17 @@ async def exchange_rate_loop():
     await bot.wait_until_ready()
 
     while not bot.is_closed():
-        await asyncio.sleep(random.randint(300, 900))
+        await asyncio.sleep(120)
 
         old_rate = get_exchange_rate()
-        movement = random.uniform(-0.30, 0.30)
+        movement = random.randint(-2500, 2500)
 
         if random.random() < 0.08:
-            movement += random.choice([-1, 1]) * random.uniform(0.20, 0.55)
+            movement += random.choice([-1, 1]) * random.randint(3000, 8000)
 
-        new_rate = round(
-            max(EXCHANGE_MIN, min(EXCHANGE_MAX, old_rate + movement)),
-            2
+        new_rate = max(
+            EXCHANGE_MIN,
+            min(EXCHANGE_MAX, old_rate + movement)
         )
 
         if new_rate == old_rate:
@@ -468,7 +468,6 @@ async def exchange_rate_loop():
 
         for guild in bot.guilds:
             await ensure_exchange_channel(guild)
-
 
 materials = {
     "скрап": {
@@ -2269,7 +2268,7 @@ async def обменять(ctx, amount: float = None):
         return
 
     rate = get_exchange_rate()
-    coins = int(amount * rate)
+    coins = round(amount * rate)
 
     if coins <= 0:
         await ctx.send("❌ Слишком маленькая сумма для обмена.")
