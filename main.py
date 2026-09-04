@@ -2220,7 +2220,7 @@ async def собрать(ctx):
         )
         return
 
-    if amount < 0.01:
+    if amount < 0.00001:
         await ctx.send("🐧 Пока почти ничего не намайнилось.")
         return
 
