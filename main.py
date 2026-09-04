@@ -2018,9 +2018,9 @@ async def ферма(ctx, action=None, *, value=None):
             f"Статус: **{status}**\n"
             f"🖥️ Видеокарта: **{gpu or 'не установлена'}**\n"
             f"💾 Linux: **{distro or 'не установлен'}**\n"
-            f"⚡ Доход: **{rate:.2f} 🐧/час**\n"
-            f"📦 Накоплено на ферме: **{pending:.2f} 🐧**\n"
-            f"🐧 В кошельке: **{penguins:.2f}**\n"
+            f"⚡ Доход: **{rate:.5f} 🐧/час**\n"
+            f"📦 Накоплено на ферме: **{pending:.5f} 🐧**\n"
+            f"🐧 В кошельке: **{penguins:.5f}**\n"
             f"💹 Курс: **1 🐧 = {get_exchange_rate():.2f} монет**"
         )
         return
@@ -2143,7 +2143,7 @@ async def ферма(ctx, action=None, *, value=None):
         await ctx.send(
             f"🖥️ В ферму установлена **{item}**.\n"
             f"✨ Редкость: **{rarity_text(item)}**\n"
-            f"⚡ Текущий доход: **{rate:.2f} 🐧/час**"
+            f"⚡ Текущий доход: **{rate:.5f} 🐧/час**"
         )
         return
 
@@ -2192,7 +2192,7 @@ async def ферма(ctx, action=None, *, value=None):
         await ctx.send(
             f"💾 На ферму установлен **{item}**.\n"
             f"✨ Редкость: **{rarity_text(item)}**\n"
-            f"⚡ Текущий доход: **{rate:.2f} 🐧/час**"
+            f"⚡ Текущий доход: **{rate:.5f} 🐧/час**"
         )
         return
 
@@ -2236,9 +2236,9 @@ async def собрать(ctx):
     conn.close()
 
     await ctx.send(
-        f"🐧 Ты собрал **{amount:.2f} пингвинчиков**.\n"
-        f"⚡ Ферма майнит **{rate:.2f} 🐧/час**.\n"
-        f"🐧 Баланс: **{get_penguins(ctx.author.id):.2f}**"
+        f"🐧 Ты собрал **{amount:.5f} пингвинчиков**.\n"
+        f"⚡ Ферма майнит **{rate:.5f} 🐧/час**.\n"
+        f"🐧 Баланс: **{get_penguins(ctx.author.id):.5f}**"
     )
 
 
@@ -2263,7 +2263,7 @@ async def обменять(ctx, amount: float = None):
 
     if penguins + 1e-9 < amount:
         await ctx.send(
-            f"❌ Недостаточно 🐧. У тебя **{penguins:.2f}**."
+            f"❌ Недостаточно 🐧. У тебя **{penguins:.5f}**."
         )
         return
 
@@ -2288,7 +2288,7 @@ async def обменять(ctx, amount: float = None):
     conn.close()
 
     await ctx.send(
-        f"💱 Обменено **{amount:.2f} 🐧** по курсу "
+        f"💱 Обменено **{amount:.5f} 🐧** по курсу "
         f"**{rate:.2f}**.\n"
         f"💰 Получено: **{coins} монет**."
     )
@@ -2441,7 +2441,7 @@ async def профиль(ctx):
 
     embed.add_field(
         name="🐧 Пингвинчики",
-        value=f"{penguins:.2f} 🐧",
+        value=f"{penguins:.5f} 🐧",
         inline=True
     )
 
